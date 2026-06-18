@@ -1,0 +1,558 @@
+@charset "utf-8";
+/////////////////////////各種ファイル読み込み/////////////////////////
+@import "contact";
+
+/////////////////////////案件ごとセッティング/////////////////////////
+html {
+  &:not(.is-loaded) * {
+    transition: none !important;
+  }
+}
+/*@function vw($px) {
+  @return calc(($px / 1600) * 100vw);
+}
+@function vw-tb($px) {
+  @return calc(($px / 768) * 100vw);
+}
+@function vw-sp($px) {
+  @return calc(($px / 375) * 100vw);
+}*/
+@function rem($px) {
+  @return calc(($px / 16) * 1rem);
+}
+//ベースフォントサイズ
+$basefontS: 14px;
+$basefontsSp: 12px;
+//カラー設定
+$colorBorder: #9e9d9d;
+$colorGray: #9e9e9e;
+$gray: #9e9e9e;
+$colorLightGray: #f2f0f0;
+$colorDarkGray: #484947;
+
+$visitColor: #282828;
+$baseColor: #282828;
+$colorBlack: #282828;
+$hoverColor: #666;
+$siteBlue: #6dc5f1;
+$sitesSkyBlue: #cfefff;
+$blown: #7c6b4a;
+$lightBrown: #f5f1ec;
+$black: #ebe3d9;
+$blue: #3b5998;
+$sky: #5ea9dd;
+$green: #2d8c3c;
+$orange: #f49603;
+$red: #e6282a;
+
+//colの余白設定
+$col-space: 14px;
+
+//リセット
+@mixin reset {
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  table,
+  th,
+  td,
+  ul,
+  li,
+  ol,
+  dl,
+  dt,
+  dd,
+  form,
+  p,
+  table,
+  th,
+  td {
+    margin: 0px;
+    padding: 0px;
+    font-weight: 300;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    list-style-type: none;
+    font-size: 100%;
+  }
+  body {
+    color: $baseColor;
+    background-color: #ffffff;
+    font-family: $notoSansJp;
+    font-feature-settings: "palt" 0;
+    line-height: 2.4;
+    letter-spacing: 0.05em;
+    font-size: $basefontS;
+    -webkit-text-size-adjust: none;
+    text-underline-offset: 3px;
+    @media only screen and (max-width: 767px) {
+      font-size: $basefontsSp;
+    }
+  }
+
+  a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+    @media only screen and (min-width: 768px) {
+      transition: 0.5s;
+    }
+    img {
+      border-top-style: none;
+      border-right-style: none;
+      border-bottom-style: none;
+      border-left-style: none;
+      @include animate;
+    }
+  }
+  img {
+    vertical-align: bottom;
+    max-width: 100%;
+    height: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  input,
+  textArea,
+  select,
+  button {
+    background: none;
+    margin: 0px;
+    outline: none;
+    padding: 0px;
+    font-weight: normal;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    list-style-type: none;
+    font-size: $basefontS;
+    -webkit-appearance: none; //iOS系のデフォルト設定を外す
+  }
+  select {
+    -webkit-appearance: button;
+    appearance: button;
+  }
+  button {
+    cursor: pointer;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  /*                link
+  ======================================================= */
+  a:link {
+    color: $baseColor;
+    text-decoration: none;
+  }
+  a:visited {
+    color: $visitColor;
+    text-decoration: none;
+  }
+  a:hover {
+    color: $hoverColor;
+    text-decoration: none;
+    @include animate;
+    img {
+      @include animate;
+      opacity: 0.8;
+    }
+  }
+  /*                common
+  ======================================================= */
+  .clear {
+    &:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+  .clear_both {
+    clear: both;
+  }
+  .hidden {
+    overflow: hidden;
+  }
+}
+
+@mixin mt150 {
+  margin-top: 150px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 80px;
+  }
+}
+@mixin mt100 {
+  margin-top: 100px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 60px;
+  }
+}
+@mixin mt80 {
+  margin-top: 80px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 40px;
+  }
+}
+@mixin mt40 {
+  margin-top: 40px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 20px;
+  }
+}
+
+@mixin animate {
+  transition: 0.5s;
+}
+
+//ボックス中央寄せ　@include boxC
+@mixin boxC {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+@mixin fa {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  //font-family: FontAwesome,$fontMeiryo;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/////////////////////////変数/////////////////////////
+//フォント変数
+$fontMeiryo: "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", Arial, sans-serif;
+$fontHira: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+$fontMintyo: "ＭＳ Ｐ明朝", "MS PMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", serif;
+$fontGothic: "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+$fontRaleway: "Raleway", "MS PGothic", sans-serif;
+$fontNoto: "Noto Sans Japanese", serif;
+$fontLato: "Lato", "arial", sans-serif;
+$fontOpenSans: "Open Sans", Arial, sans-serif;
+$fontYuMin: "游明朝体", "Yu Mincho", YuMincho, "ヒラギノ明朝 Pro", "Hiragino Mincho Pro", "MS P明朝", "MS PMincho", serif;
+$fontYuGothic: "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", "メイリオ", sans-serif;
+$fontNoteMin: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "Noto Serif JP", "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "HGS明朝E", serif;
+$roboto: "Roboto Condensed", sans-serif;
+$playfair: "Playfair Display", serif;
+$notoSansJp: "Noto Sans JP", sans-serif;
+$fontNotoSerif: "Noto Serif JP", serif;
+$josefinSans: "Josefin Sans", sans-serif;
+$allura: "Allura", cursive;
+
+/////////////////////////フォントサイズ設定/////////////////////////
+$fontS6: true;
+$fontS7: true;
+$fontS8: true;
+$fontS9: true;
+$fontS10: true;
+$fontS11: true;
+$fontS12: true;
+$fontS13: true;
+$fontS14: true;
+$fontS15: true;
+$fontS16: true;
+$fontS17: true;
+$fontS18: true;
+$fontS19: true;
+$fontS20: true;
+$fontS21: true;
+$fontS22: true;
+$fontS23: true;
+$fontS24: true;
+$fontS25: true;
+$fontS26: true;
+$fontS27: true;
+$fontS28: true;
+$fontS29: true;
+$fontS30: true;
+$fontS31: true;
+$fontS32: true;
+$fontS33: true;
+$fontS34: true;
+$fontS35: true;
+$fontS36: true;
+$fontS37: true;
+$fontS38: true;
+$fontS39: true;
+$fontS40: true;
+$fontS41: true;
+$fontS42: true;
+$fontS43: true;
+$fontS44: true;
+$fontS45: true;
+$fontS46: true;
+$fontS47: true;
+$fontS48: true;
+$fontS49: true;
+$fontS50: true;
+$fontS54: true;
+$fontS60: true;
+
+////////// メディアクエリー //////////
+//デバイス幅
+$width-1800: 1800px;
+$width-1700: 1700px;
+$width-1600: 1600px;
+$width-1500: 1500px;
+$width-1400: 1400px;
+$width-1300: 1300px;
+$width-1200: 1200px;
+$width-1100: 1100px;
+$width-950: 950px;
+$width-1025: 1025px;
+$width-1024: 1024px;
+$width-950: 950px;
+$width-900: 900px;
+$width-850: 850px;
+$width-800: 800px;
+$width-768: 768px;
+$width-700: 700px;
+$width-640: 640px;
+$width-600: 600px;
+$width-500: 500px;
+$width-480: 480px;
+$width-400: 400px;
+$width-350: 350px;
+$width-320: 320px;
+$width-over: 1px;
+//デバイス高さ
+$height-600: 600px;
+@mixin mediaH600 {
+  //  600以下
+  @media only screen and (max-height: $height-600) {
+    @content;
+  }
+}
+//メディアクエリー @include media1200
+@mixin mediayoko {
+  //  横向き
+  @media only screen and (max-device-width: 640px) and (orientation: landscape) {
+    @content;
+  }
+}
+@mixin media1800 {
+  //  1800以下
+  @media only screen and (max-width: $width-1800) {
+    @content;
+  }
+}
+@mixin media1700 {
+  //  1700以下
+  @media only screen and (max-width: $width-1700) {
+    @content;
+  }
+}
+
+@mixin media1600 {
+  //  1600以下
+  @media only screen and (max-width: $width-1600) {
+    @content;
+  }
+}
+@mixin media1500 {
+  //  1500以下
+  @media only screen and (max-width: $width-1500) {
+    @content;
+  }
+}
+@mixin media1400 {
+  //  1400以下
+  @media only screen and (max-width: $width-1400) {
+    @content;
+  }
+}
+@mixin media1301 {
+  //  1300以下
+  @media only screen and (min-width: $width-1300 + $width-over) {
+    @content;
+  }
+}
+@mixin media1300 {
+  //  1300以下
+  @media only screen and (max-width: $width-1300) {
+    @content;
+  }
+}
+@mixin media1200 {
+  //  1200以下
+  @media only screen and (max-width: $width-1200) {
+    @content;
+  }
+}
+@mixin media1100 {
+  //  1100以下
+  @media only screen and (max-width: $width-1100) {
+    @content;
+  }
+}
+@mixin media1025 {
+  // 1025以上
+  @media only screen and (min-width: $width-1024 + $width-over) {
+    @content;
+  }
+}
+@mixin media1024 {
+  // 950以下
+  @media only screen and (max-width: $width-1024) {
+    @content;
+  }
+}
+@mixin media950 {
+  // 950以下
+  @media only screen and (max-width: $width-950) {
+    @content;
+  }
+}
+@mixin media900 {
+  // 900以下
+  @media only screen and (max-width: $width-900) {
+    @content;
+  }
+}
+@mixin media850 {
+  // 850以下
+  @media only screen and (max-width: $width-850) {
+    @content;
+  }
+}
+@mixin media800 {
+  // 800以下
+  @media only screen and (max-width: $width-800) {
+    @content;
+  }
+}
+@mixin media769 {
+  //  769以上
+  @media only screen and (min-width: $width-768 + $width-over) {
+    @content;
+  }
+}
+
+@mixin media768 {
+  // 768以下
+  @media only screen and (max-width: $width-768) {
+    @content;
+  }
+}
+@mixin media767 {
+  // 767以下
+  @media only screen and (max-width: $width-768 - $width-over) {
+    @content;
+  }
+}
+@mixin media700 {
+  // 700以下
+  @media only screen and (max-width: $width-700) {
+    @content;
+  }
+}
+@mixin media641 {
+  //  641以上
+  @media only screen and (min-width: $width-640 + $width-over) {
+    @content;
+  }
+}
+@mixin media640 {
+  // 640以下
+  @media only screen and (max-width: $width-640) {
+    @content;
+  }
+}
+@mixin media600 {
+  // 600以下
+  @media only screen and (max-width: $width-600) {
+    @content;
+  }
+}
+@mixin media500 {
+  // 500以下
+  @media only screen and (max-width: $width-500) {
+    @content;
+  }
+}
+
+@mixin media480 {
+  // 480以下
+  @media only screen and (max-width: $width-480) {
+    @content;
+  }
+}
+
+@mixin media400 {
+  // 4400以下
+  @media only screen and (max-width: $width-400) {
+    @content;
+  }
+}
+@mixin media350 {
+  // 350以下
+  @media only screen and (max-width: $width-350) {
+    @content;
+  }
+}
+@mixin media320 {
+  // 320以下
+  @media only screen and (max-width: $width-320) {
+    @content;
+  }
+}
+// タイトル フォントサイズ
+@mixin fs-ttl__32--sp24 {
+  font-size: vw(32);
+  @include media1279 {
+    font-size: vw-tb(24);
+  }
+  @include media767 {
+    font-size: vw-sp(24);
+  }
+}
+@mixin fs-ttl__24--sp18 {
+  font-size: vw(24);
+  @include media1279 {
+    font-size: vw-tb(18);
+  }
+  @include media767 {
+    font-size: vw-sp(18);
+  }
+}
+
+@mixin fs-ttl {
+  font-size: 18px;
+  @include media767 {
+    font-size: 16px;
+  }
+}
+@mixin fs-subttl {
+  font-size: 16px;
+  @include media767 {
+    font-size: 14px;
+  }
+}
+@mixin fs-txt {
+  font-size: 14px;
+  @include media767 {
+    font-size: 12px;
+  }
+}
+@mixin mt150 {
+  margin-top: 150px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 80px;
+  }
+}
+@mixin mt100 {
+  margin-top: 100px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 60px;
+  }
+}
+@mixin mt80 {
+  margin-top: 80px;
+  @media only screen and (max-width: 767px) {
+    margin-top: 40px;
+  }
+}

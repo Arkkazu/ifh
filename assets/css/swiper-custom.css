@@ -1,0 +1,26 @@
+html:not(.is-loaded) * {
+  transition: none !important;
+}
+
+/*@function vw($px) {
+  @return calc(($px / 1600) * 100vw);
+}
+@function vw-tb($px) {
+  @return calc(($px / 768) * 100vw);
+}
+@function vw-sp($px) {
+  @return calc(($px / 375) * 100vw);
+}*/
+.swiper-pagination-bullet-active {
+  background-color: #000;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000;
+  transform: translateY(-50%);
+}
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 20px;
+}

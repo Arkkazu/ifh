@@ -1,0 +1,14 @@
+@charset "utf-8";
+@use "setting" as *;
+
+.swiper-pagination-bullet-active {
+  background-color: #000;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000;
+  transform: translateY(-50%);
+  &:after {
+    font-size: 20px;
+  }
+}

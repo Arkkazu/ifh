@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.numList {
+  counter-reset: item;
+}
+.numList li > span::before {
+  content: counter(item) ". ";
+  counter-increment: item;
+}
+
+.numList-double {
+  counter-reset: item;
+}
+.numList-double__num::before {
+  content: counter(item) ". ";
+  counter-increment: item;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  height: 40px;
+  width: 40px;
+}
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  height: 40px;
+  margin: auto;
+  width: 40px;
+}
+
+.swiper-button-prev {
+  left: 0;
+  transform: translateX(-50%);
+}
+.swiper-button-prev::after {
+  background-image: url("/wp-content/themes/ifh_theme/assets/media/images/recruit/svg-slide-arrow-left.svg");
+}
+
+.swiper-button-next {
+  right: 0;
+  transform: translateX(50%);
+}
+.swiper-button-next::after {
+  background-image: url("/wp-content/themes/ifh_theme/assets/media/images/recruit/svg-slide-arrow-right.svg");
+}
+
+@layer components {
+  .main-width {
+    @apply mx-auto w-full max-w-1200 px-15 md:px-50;
+  }
+  .sub-width {
+    @apply mx-auto w-full max-w-910 px-15 md:px-50;
+  }
+  .btn {
+    @apply ml-10 rounded px-4 py-2 font-bold;
+  }
+  .btn-blue {
+    @apply bg-blue-500 text-white duration-500;
+  }
+  .btn-blue:hover {
+    @apply bg-blue-600;
+  }
+}
+@media only screen and (min-width: 1024px) {
+  .scroll .salonList-top {
+    top: 80px;
+  }
+}
+
+.is-modal-opened .js-modal-cont {
+  @apply scale-100;
+}
+
+.js-modal-cont {
+  @apply scale-100;
+}

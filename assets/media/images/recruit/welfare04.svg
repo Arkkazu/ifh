@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_レイヤー_2" data-name="レイヤー 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43.23 67.22">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4b4b4b;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #4b4b4b;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3px;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="_レイヤー_1-2" data-name="レイヤー 1">
+    <g>
+      <rect class="cls-2" x="1.5" y="9.4" width="40.23" height="56.32"/>
+      <polygon class="cls-1" points="41.73 9.4 1.5 9.4 5.99 1.5 38.13 1.5 41.73 9.4"/>
+      <line class="cls-2" x1="2.47" y1="37.97" x2="41.21" y2="37.97"/>
+      <g>
+        <path class="cls-2" d="m21.62,37.56s-13.1,1.01-13.1-5.21c0-4.37,5.97-3.36,7.74-2.14,3.19,2.18,5.35,7.35,5.35,7.35Z"/>
+        <path class="cls-2" d="m21.62,37.56s13.1,1.01,13.1-5.21c0-4.37-5.97-3.36-7.74-2.14-3.19,2.18-5.35,7.35-5.35,7.35Z"/>
+        <path class="cls-2" d="m21.62,37.56s-4.58,7.67-12.29,9.22"/>
+        <path class="cls-2" d="m21.62,37.56s4.58,7.67,12.29,9.22"/>
+      </g>
+    </g>
+  </g>
+</svg>

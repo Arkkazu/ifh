@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_レイヤー_2" data-name="レイヤー 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10.16 10.17">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g id="_レイヤー_1-2" data-name="レイヤー 1">
+    <g>
+      <polygon class="cls-1" points="5.07 10.17 4.72 9.82 9.45 5.09 4.72 .35 5.07 0 10.16 5.09 5.07 10.17"/>
+      <polygon class="cls-1" points=".35 10.17 0 9.82 4.73 5.09 0 .35 .35 0 5.44 5.09 .35 10.17"/>
+    </g>
+  </g>
+</svg>
