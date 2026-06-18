@@ -1,0 +1,78 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview changes without uploading files"
+        required: true
+        default: true
+        type: boolean
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build theme
+        run: npm run build
+
+      - name: Prepare SSH
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_SSH_KEY"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$PROD_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${PROD_PORT:-22}" "$PROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy theme
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_PATH: ${{ secrets.PROD_PATH }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_USER"
+          test -n "$PROD_PATH"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          RSYNC_FLAGS="-az"
+          if [ "$DRY_RUN" = "true" ]; then
+            RSYNC_FLAGS="$RSYNC_FLAGS --dry-run --itemize-changes"
+          fi
+          $SSH_CMD "$PROD_USER@$PROD_HOST" "mkdir -p \"$PROD_PATH\""
+          rsync $RSYNC_FLAGS \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='node_modules/' \
+            --exclude='.env' \
+            --exclude='*.local' \
+            -e "$SSH_CMD" \
+            ./ "$PROD_USER@$PROD_HOST:$PROD_PATH/"
