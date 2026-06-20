@@ -34,12 +34,15 @@ if (burger) {
 ////end .js-burgerをクリックで#sp_menuを開閉
 
 //// ページトップへスクロール
-document.querySelector("#pagetop a").addEventListener("click", function (e) {
-  e.preventDefault();
+const pagetopLink = document.querySelector("#pagetop a");
+if (pagetopLink) {
+  pagetopLink.addEventListener("click", function (e) {
+    e.preventDefault();
 
-  document.querySelector(".js-scroll-container").scrollTo({
-    top: 0,
-    behavior: "smooth",
+    document.querySelector(".js-scroll-container")?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   });
-});
+}
 //// end ページトップへスクロール

@@ -1,2 +1,2 @@
-import "./js/common.js";
 import "./style.css";
+import "./js/common.js";
