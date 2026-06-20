@@ -54,7 +54,7 @@ jobs:
         if: ${{ env.DEPLOY_MODE == 'backup-deploy' || env.DEPLOY_MODE == 'release-deploy' }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
