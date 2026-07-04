@@ -1,22 +1,22 @@
 <?php
 
-require_once get_theme_file_path('inc/vite.php');
-require_once get_theme_file_path('inc/csp.php');
-require_once get_theme_file_path('inc/images.php');
-require_once get_theme_file_path('inc/custom-post.php');
-require_once get_theme_file_path('inc/html5-type-attr-strip.php');
-require_once get_theme_file_path('inc/wp-head-cleanup.php');
-require_once get_theme_file_path('inc/enqueue-page-styles.php');
-require_once get_theme_file_path('inc/enqueue-scripts.php');
-require_once get_theme_file_path('inc/critical-css.php');
-require_once get_theme_file_path('inc/breadcrumbs.php');
+require_once __DIR__ . '/inc/vite.php';
+require_once __DIR__ . '/inc/csp.php';
+require_once __DIR__ . '/inc/images.php';
+require_once __DIR__ . '/inc/custom-post.php';
+require_once __DIR__ . '/inc/html5-type-attr-strip.php';
+require_once __DIR__ . '/inc/wp-head-cleanup.php';
+require_once __DIR__ . '/inc/enqueue-page-styles.php';
+require_once __DIR__ . '/inc/enqueue-scripts.php';
+require_once __DIR__ . '/inc/critical-css.php';
+require_once __DIR__ . '/inc/breadcrumbs.php';
 
-require_once get_theme_file_path('inc/monthly-archive-posts-per-page.php');
-
+require_once __DIR__ . '/inc/monthly-archive-posts-per-page.php';
 
-require_once get_theme_file_path('inc/admin.php');
-// require_once get_theme_file_path('inc/admin/menu-visibility.php');
-// require_once get_theme_file_path('inc/admin/adminbar-visibility.php');
+
+require_once __DIR__ . '/inc/admin.php';
+// require_once __DIR__ . '/inc/admin/menu-visibility.php';
+// require_once __DIR__ . '/inc/admin/adminbar-visibility.php';
 
 //Gutenbergを無効化
 //add_filter( 'use_block_editor_for_post', '__return_false' ); //全てのコンテンツで無効化
