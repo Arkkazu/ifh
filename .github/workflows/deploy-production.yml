@@ -14,6 +14,8 @@ on:
         options:
           - direct-deploy
           - cleanup-theme-junk
+          - repair-theme-options
+          - diagnose-production
       dry_run:
         description: "Preview changes without changing production"
         required: true
@@ -122,6 +124,119 @@ jobs:
             -e "$SSH_CMD" \
             ./ "$REMOTE:$PROD_PATH/"
 
+      - name: Repair WordPress active theme options
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' || env.DEPLOY_MODE == 'repair-theme-options' }}
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_PATH: ${{ secrets.PROD_PATH }}
+          DRY_RUN: ${{ env.DEPLOY_DRY_RUN }}
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_USER"
+          test -n "$PROD_PATH"
+          PROD_PATH="${PROD_PATH%/}"
+
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          REMOTE="$PROD_USER@$PROD_HOST"
+
+          q() { printf '%q' "$1"; }
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") DRY_RUN=$(q "$DRY_RUN") bash -s" <<'REMOTE_REPAIR_THEME'
+          set -eu
+          THEME_NAME="$(basename "$PROD_PATH")"
+          PARENT_DIR="$(dirname "$PROD_PATH")"
+          WP_CONTENT_DIR="$(dirname "$PARENT_DIR")"
+          WP_ROOT="$(dirname "$WP_CONTENT_DIR")"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run: would set WordPress template and stylesheet to $THEME_NAME"
+            exit 0
+          fi
+
+          if command -v wp >/dev/null 2>&1; then
+            cd "$WP_ROOT"
+            wp option update template "$THEME_NAME" --skip-themes --skip-plugins --allow-root
+            wp option update stylesheet "$THEME_NAME" --skip-themes --skip-plugins --allow-root
+            wp cache flush --skip-themes --skip-plugins --allow-root || true
+            echo "Repaired WordPress active theme options with WP-CLI: $THEME_NAME"
+            exit 0
+          fi
+
+          if command -v php >/dev/null 2>&1; then
+            WP_ROOT="$WP_ROOT" THEME_NAME="$THEME_NAME" php <<'PHP_REPAIR'
+          <?php
+          $wp_root = getenv('WP_ROOT');
+          $theme = getenv('THEME_NAME');
+          $config_path = $wp_root . '/wp-config.php';
+          $config = file_get_contents($config_path);
+          if ($config === false) {
+              fwrite(STDERR, "Failed to read wp-config.php\n");
+              exit(1);
+          }
+
+          $const = function ($name) use ($config) {
+              $pattern = "/define\\s*\\(\\s*['\"]" . preg_quote($name, '/') . "['\"]\\s*,\\s*(['\"])(.*?)\\1\\s*\\)/s";
+              if (!preg_match($pattern, $config, $matches)) {
+                  throw new RuntimeException("Missing DB constant: " . $name);
+              }
+              return stripcslashes($matches[2]);
+          };
+
+          if (!preg_match('/\\$table_prefix\\s*=\\s*([\'\"])(.*?)\\1\\s*;/s', $config, $prefix_matches)) {
+              fwrite(STDERR, "Missing table_prefix\n");
+              exit(1);
+          }
+
+          $db_name = $const('DB_NAME');
+          $db_user = $const('DB_USER');
+          $db_password = $const('DB_PASSWORD');
+          $db_host = $const('DB_HOST');
+          $prefix = $prefix_matches[2];
+          $port = ini_get('mysqli.default_port');
+          $socket = null;
+
+          if (strpos($db_host, ':') !== false && substr($db_host, 0, 1) !== '[') {
+              [$db_host_only, $host_suffix] = explode(':', $db_host, 2);
+              if (ctype_digit($host_suffix)) {
+                  $db_host = $db_host_only;
+                  $port = (int) $host_suffix;
+              } else {
+                  $db_host = $db_host_only;
+                  $socket = $host_suffix;
+              }
+          }
+
+          $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name, (int) $port, $socket ?: null);
+          if ($mysqli->connect_errno) {
+              fwrite(STDERR, "DB connect failed: " . $mysqli->connect_error . "\n");
+              exit(1);
+          }
+
+          $table = '`' . str_replace('`', '``', $prefix . 'options') . '`';
+          $stmt = $mysqli->prepare("UPDATE $table SET option_value = ? WHERE option_name = ?");
+          if (!$stmt) {
+              fwrite(STDERR, "Prepare failed: " . $mysqli->error . "\n");
+              exit(1);
+          }
+
+          foreach (['template', 'stylesheet'] as $option_name) {
+              $stmt->bind_param('ss', $theme, $option_name);
+              if (!$stmt->execute()) {
+                  fwrite(STDERR, "Update failed for $option_name: " . $stmt->error . "\n");
+                  exit(1);
+              }
+              echo "Updated $option_name to $theme\n";
+          }
+          PHP_REPAIR
+            echo "Repaired WordPress active theme options with PHP DB fallback: $THEME_NAME"
+            exit 0
+          fi
+
+          echo "Neither wp nor php command is available for theme option repair." >&2
+          exit 1
+          REMOTE_REPAIR_THEME
       - name: Clean old deploy theme folders
         if: ${{ env.DEPLOY_MODE == 'cleanup-theme-junk' }}
         env:
@@ -172,6 +287,77 @@ jobs:
           fi
           REMOTE_CLEAN
 
+      - name: Diagnose production theme
+        if: ${{ env.DEPLOY_MODE == 'diagnose-production' }}
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_PATH: ${{ secrets.PROD_PATH }}
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_USER"
+          test -n "$PROD_PATH"
+          PROD_PATH="${PROD_PATH%/}"
+
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          REMOTE="$PROD_USER@$PROD_HOST"
+
+          q() { printf '%q' "$1"; }
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") bash -s" <<'REMOTE_DIAG'
+          set -u
+          PARENT_DIR="$(dirname "$PROD_PATH")"
+          WP_CONTENT_DIR="$(dirname "$PARENT_DIR")"
+          WP_ROOT="$(dirname "$WP_CONTENT_DIR")"
+
+          echo "== theme path =="
+          if [ -L "$PROD_PATH" ]; then
+            echo "prod_path_is_symlink=yes"
+            echo "prod_path_link_target=$(readlink "$PROD_PATH")"
+          else
+            echo "prod_path_is_symlink=no"
+          fi
+          ls -ld "$PROD_PATH" || true
+
+          echo "== required files =="
+          for rel in style.css functions.php index.php page-furisode.php inc/vite.php dist/assets/style.css dist/assets/page-furisode.css; do
+            if [ -e "$PROD_PATH/$rel" ]; then
+              size="$(wc -c < "$PROD_PATH/$rel" 2>/dev/null || echo '?')"
+              echo "present $rel size=$size"
+            else
+              echo "missing $rel"
+            fi
+          done
+
+          echo "== theme siblings =="
+          find "$PARENT_DIR" -maxdepth 1 -mindepth 1 -printf '%f %y\n' 2>/dev/null | sort || ls -la "$PARENT_DIR"
+
+          echo "== php lint =="
+          if command -v php >/dev/null 2>&1; then
+            php -l "$PROD_PATH/functions.php" || true
+            php -l "$PROD_PATH/page-furisode.php" || true
+          else
+            echo "php command not found"
+          fi
+
+          echo "== wp cli =="
+          if command -v wp >/dev/null 2>&1; then
+            (cd "$WP_ROOT" && wp theme list --allow-root) || true
+            (cd "$WP_ROOT" && wp option get template --allow-root) || true
+            (cd "$WP_ROOT" && wp option get stylesheet --allow-root) || true
+          else
+            echo "wp command not found"
+          fi
+
+          echo "== recent logs =="
+          for log in "$WP_CONTENT_DIR/debug.log" "$WP_CONTENT_DIR/error_log" "$PROD_PATH/error_log" "$WP_ROOT/error_log"; do
+            if [ -f "$log" ]; then
+              echo "-- $(basename "$log") --"
+              tail -n 80 "$log" || true
+            fi
+          done
+          REMOTE_DIAG
       - name: Health check
         if: ${{ env.DEPLOY_MODE == 'direct-deploy' && env.DEPLOY_DRY_RUN != 'true' }}
         env:
