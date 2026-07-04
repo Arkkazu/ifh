@@ -157,11 +157,18 @@ jobs:
 
           if command -v wp >/dev/null 2>&1; then
             cd "$WP_ROOT"
+            set +e
             wp option update template "$THEME_NAME" --skip-themes --skip-plugins --allow-root
+            wp_template_status=$?
             wp option update stylesheet "$THEME_NAME" --skip-themes --skip-plugins --allow-root
-            wp cache flush --skip-themes --skip-plugins --allow-root || true
-            echo "Repaired WordPress active theme options with WP-CLI: $THEME_NAME"
-            exit 0
+            wp_stylesheet_status=$?
+            wp cache flush --skip-themes --skip-plugins --allow-root
+            set -e
+            if [ "$wp_template_status" -eq 0 ] && [ "$wp_stylesheet_status" -eq 0 ]; then
+              echo "Repaired WordPress active theme options with WP-CLI: $THEME_NAME"
+              exit 0
+            fi
+            echo "WP-CLI repair failed; falling back to direct DB update."
           fi
 
           if command -v php >/dev/null 2>&1; then
@@ -198,7 +205,7 @@ jobs:
           $socket = null;
 
           if (strpos($db_host, ':') !== false && substr($db_host, 0, 1) !== '[') {
-              [$db_host_only, $host_suffix] = explode(':', $db_host, 2);
+              list($db_host_only, $host_suffix) = explode(':', $db_host, 2);
               if (ctype_digit($host_suffix)) {
                   $db_host = $db_host_only;
                   $port = (int) $host_suffix;
@@ -208,7 +215,13 @@ jobs:
               }
           }
 
-          $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name, (int) $port, $socket ?: null);
+                    if ($socket) {
+              $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name, null, $socket);
+          } elseif ($port) {
+              $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name, (int) $port);
+          } else {
+              $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name);
+          }
           if ($mysqli->connect_errno) {
               fwrite(STDERR, "DB connect failed: " . $mysqli->connect_error . "\n");
               exit(1);
