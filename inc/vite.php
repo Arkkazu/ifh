@@ -9,6 +9,11 @@ add_action('wp_enqueue_scripts', function () {
     ? 'http://localhost:5173'
     : get_template_directory_uri() . '/dist/assets';
 
+  $asset_version = function ($filename) {
+    $path = get_template_directory() . '/dist/assets/' . $filename;
+    return file_exists($path) ? filemtime($path) : null;
+  };
+
   /* ───── 共通アセット ───── */
   if ($is_dev) {
     add_action('wp_footer', fn() => print(
@@ -16,9 +21,9 @@ add_action('wp_enqueue_scripts', function () {
       . '<script type="module" src="' . $vite . '/src/main.js"></script>'
     ));
   } else {
-    wp_enqueue_style('theme-style',  $vite . '/style.css', [], null);
+    wp_enqueue_style('theme-style',  $vite . '/style.css', [], $asset_version('style.css'));
     // wp_enqueue_style('theme-main-style', $vite . '/main.css', [], null);
-    wp_enqueue_script('theme-main',  $vite . '/main.js',  [], null, true);
+    wp_enqueue_script('theme-main',  $vite . '/main.js',  [], $asset_version('main.js'), true);
   }
 
   /* ───── ページ専用バンドル ───── */
@@ -70,11 +75,13 @@ add_action('wp_enqueue_scripts', function () {
       );
       break;
     } elseif (file_exists($prod_path)) {
+      $page_script = basename($rel_path, '.js') . '.js';
+
       wp_enqueue_script(
         'page-script',
-        $vite . '/' . basename($rel_path, '.js') . '.js',
+        $vite . '/' . $page_script,
         [],
-        null,
+        $asset_version($page_script),
         true
       );
       break;
