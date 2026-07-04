@@ -347,7 +347,11 @@ jobs:
             echo "PROD_HEALTHCHECK_URL is not set. Skipping web OPcache reset request."
           fi
 
-          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") RESET_NAME=$(q "$RESET_NAME") rm -f \"\$PROD_PATH/\$RESET_NAME\""
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") bash -s" <<'REMOTE_OPCACHE_CLEAN'
+          set -eu
+          find "$PROD_PATH" -maxdepth 1 -type f -name '.deploy-opcache-reset-*.php' -delete
+          REMOTE_OPCACHE_CLEAN
+
       - name: Clean old deploy theme folders
         if: ${{ env.DEPLOY_MODE == 'cleanup-theme-junk' }}
         env:
