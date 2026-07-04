@@ -9,25 +9,16 @@ on:
       mode:
         description: "Deployment operation"
         required: true
-        default: "backup-deploy"
+        default: "direct-deploy"
         type: choice
         options:
-          - backup-deploy
-          - backup-restore
-          - release-rollback
+          - direct-deploy
+          - cleanup-theme-junk
       dry_run:
         description: "Preview changes without changing production"
         required: true
         default: true
         type: boolean
-      backup_name:
-        description: "Backup folder name for backup-restore. Empty uses the latest backup."
-        required: false
-        type: string
-      release_name:
-        description: "Release folder name for release-rollback. Empty uses the previous release."
-        required: false
-        type: string
 
 concurrency:
   group: deploy-production
@@ -38,10 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      DEPLOY_MODE: ${{ github.event_name == 'push' && 'backup-deploy' || inputs.mode }}
+      DEPLOY_MODE: ${{ github.event_name == 'push' && 'direct-deploy' || inputs.mode }}
       DEPLOY_DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
-      DEPLOY_BACKUP_NAME: ${{ github.event_name == 'push' && '' || inputs.backup_name }}
-      DEPLOY_RELEASE_NAME: ${{ github.event_name == 'push' && '' || inputs.release_name }}
 
     steps:
       - name: Checkout
@@ -50,18 +39,18 @@ jobs:
           lfs: true
 
       - name: Setup Node.js
-        if: ${{ env.DEPLOY_MODE == 'backup-deploy' || env.DEPLOY_MODE == 'release-deploy' }}
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
-        if: ${{ env.DEPLOY_MODE == 'backup-deploy' || env.DEPLOY_MODE == 'release-deploy' }}
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
         run: npm ci
 
       - name: Build theme
-        if: ${{ env.DEPLOY_MODE == 'backup-deploy' || env.DEPLOY_MODE == 'release-deploy' }}
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
         run: npm run build
 
       - name: Prepare SSH
@@ -78,8 +67,8 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "${PROD_PORT:-22}" "$PROD_HOST" >> ~/.ssh/known_hosts
 
-      - name: Deploy with production backup
-        if: ${{ env.DEPLOY_MODE == 'backup-deploy' }}
+      - name: Deploy directly to production theme directory
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
         env:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
@@ -94,41 +83,28 @@ jobs:
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
           REMOTE="$PROD_USER@$PROD_HOST"
-          THEME_NAME="$(basename "$PROD_PATH")"
-          PARENT_DIR="$(dirname "$PROD_PATH")"
-          STAMP="$(date -u +%Y%m%d_%H%M%S)-${GITHUB_SHA::7}"
-          BACKUP_NAME="${THEME_NAME}_backup_${STAMP}"
-          BACKUP_PATH="${PARENT_DIR}/${BACKUP_NAME}"
 
+          q() { printf '%q' "$1"; }
           if [ "$DRY_RUN" = "true" ]; then
-            echo "Dry run: would copy $PROD_PATH to $BACKUP_PATH before deployment."
-          else
-            q() { printf '%q' "$1"; }
-            $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") BACKUP_PATH=$(q "$BACKUP_PATH") PARENT_DIR=$(q "$PARENT_DIR") BACKUP_NAME=$(q "$BACKUP_NAME") bash -s" <<'REMOTE_BACKUP'
+            $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") bash -s" <<'REMOTE_PREP_DRYRUN'
           set -eu
-          mkdir -p "$PARENT_DIR"
           if [ -L "$PROD_PATH" ]; then
-            link_target="$(readlink "$PROD_PATH")"
-            case "$link_target" in
-              /*) backup_source="$link_target" ;;
-              *) backup_source="$PARENT_DIR/$link_target" ;;
-            esac
-            test -d "$backup_source"
-            cp -a "$backup_source" "$BACKUP_PATH"
+            echo "Dry run: would convert production theme symlink to regular directory: $PROD_PATH"
+          else
+            echo "Dry run: production theme path is already a regular directory or will be created: $PROD_PATH"
+          fi
+          REMOTE_PREP_DRYRUN
+          else
+            $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") bash -s" <<'REMOTE_PREP'
+          set -eu
+          if [ -L "$PROD_PATH" ]; then
             rm "$PROD_PATH"
             mkdir -p "$PROD_PATH"
-            printf '%s\n' "$BACKUP_NAME" > "$PARENT_DIR/.ifh_theme_last_backup"
             echo "Converted production theme symlink to regular directory: $PROD_PATH"
-            echo "Created backup from symlink target: $BACKUP_PATH"
-          elif [ -e "$PROD_PATH" ]; then
-            cp -a "$PROD_PATH" "$BACKUP_PATH"
-            printf '%s\n' "$BACKUP_NAME" > "$PARENT_DIR/.ifh_theme_last_backup"
-            echo "Created backup: $BACKUP_PATH"
           else
             mkdir -p "$PROD_PATH"
-            echo "Production theme path did not exist, created: $PROD_PATH"
           fi
-          REMOTE_BACKUP
+          REMOTE_PREP
           fi
 
           RSYNC_FLAGS="-az"
@@ -145,15 +121,14 @@ jobs:
             -e "$SSH_CMD" \
             ./ "$REMOTE:$PROD_PATH/"
 
-      - name: Restore production backup
-        if: ${{ env.DEPLOY_MODE == 'backup-restore' }}
+      - name: Clean old deploy theme folders
+        if: ${{ env.DEPLOY_MODE == 'cleanup-theme-junk' }}
         env:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
           PROD_PORT: ${{ secrets.PROD_PORT }}
           PROD_PATH: ${{ secrets.PROD_PATH }}
           DRY_RUN: ${{ env.DEPLOY_DRY_RUN }}
-          BACKUP_NAME_INPUT: ${{ env.DEPLOY_BACKUP_NAME }}
         run: |
           set -eu
           test -n "$PROD_HOST"
@@ -162,269 +137,49 @@ jobs:
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
           REMOTE="$PROD_USER@$PROD_HOST"
-          THEME_NAME="$(basename "$PROD_PATH")"
-          PARENT_DIR="$(dirname "$PROD_PATH")"
-          STAMP="$(date -u +%Y%m%d_%H%M%S)-${GITHUB_SHA::7}"
-          FAILED_PATH="${PARENT_DIR}/${THEME_NAME}_failed_${STAMP}"
 
           q() { printf '%q' "$1"; }
-          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") PARENT_DIR=$(q "$PARENT_DIR") FAILED_PATH=$(q "$FAILED_PATH") BACKUP_NAME_INPUT=$(q "$BACKUP_NAME_INPUT") DRY_RUN=$(q "$DRY_RUN") bash -s" <<'REMOTE_RESTORE'
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") DRY_RUN=$(q "$DRY_RUN") bash -s" <<'REMOTE_CLEAN'
           set -eu
-          backup_name="$BACKUP_NAME_INPUT"
-          if [ -z "$backup_name" ]; then
-            backup_name="$(cat "$PARENT_DIR/.ifh_theme_last_backup")"
-          fi
-          backup_path="$PARENT_DIR/$backup_name"
-          test -e "$backup_path"
-
-          if [ "$DRY_RUN" = "true" ]; then
-            echo "Dry run: would move current theme to $FAILED_PATH"
-            echo "Dry run: would restore $backup_path to $PROD_PATH"
-            exit 0
-          fi
-
-          if [ -e "$PROD_PATH" ] || [ -L "$PROD_PATH" ]; then
-            mv "$PROD_PATH" "$FAILED_PATH"
-          fi
-          cp -a "$backup_path" "$PROD_PATH"
-          echo "Restored backup: $backup_path"
-          echo "Previous broken theme kept at: $FAILED_PATH"
-          REMOTE_RESTORE
-
-      - name: Upload release
-        if: ${{ env.DEPLOY_MODE == 'release-deploy' }}
-        env:
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-          PROD_PORT: ${{ secrets.PROD_PORT }}
-          PROD_PATH: ${{ secrets.PROD_PATH }}
-          DRY_RUN: ${{ env.DEPLOY_DRY_RUN }}
-          RELEASE_NAME_INPUT: ${{ env.DEPLOY_RELEASE_NAME }}
-        run: |
-          set -eu
-          test -n "$PROD_HOST"
-          test -n "$PROD_USER"
-          test -n "$PROD_PATH"
-
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
-          REMOTE="$PROD_USER@$PROD_HOST"
           THEME_NAME="$(basename "$PROD_PATH")"
           PARENT_DIR="$(dirname "$PROD_PATH")"
-          RELEASES_DIR="${PARENT_DIR}/${THEME_NAME}_releases"
-          DEFAULT_RELEASE_NAME="$(date -u +%Y%m%d_%H%M%S)-${GITHUB_SHA::7}"
-          RELEASE_NAME="${RELEASE_NAME_INPUT:-$DEFAULT_RELEASE_NAME}"
-          RELEASE_PATH="${RELEASES_DIR}/${RELEASE_NAME}"
+          found=0
 
-          echo "release_name=$RELEASE_NAME" >> "$GITHUB_ENV"
-          echo "releases_dir=$RELEASES_DIR" >> "$GITHUB_ENV"
-          echo "release_path=$RELEASE_PATH" >> "$GITHUB_ENV"
-
-          RSYNC_FLAGS="-az"
-          TARGET_PATH="$RELEASE_PATH"
-
-          if [ "$DRY_RUN" = "true" ]; then
-            RSYNC_FLAGS="$RSYNC_FLAGS --dry-run --itemize-changes"
-            TARGET_PATH="$PROD_PATH"
-            echo "Dry run: would upload release to $RELEASE_PATH"
-            echo "Dry run: comparing files against current production path $PROD_PATH"
-          else
-            q() { printf '%q' "$1"; }
-            $SSH_CMD "$REMOTE" "RELEASE_PATH=$(q "$RELEASE_PATH") bash -s" <<'REMOTE_RELEASE_DIR'
-          set -eu
-          mkdir -p "$RELEASE_PATH"
-          REMOTE_RELEASE_DIR
-          fi
-
-          rsync $RSYNC_FLAGS \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='node_modules/' \
-            --exclude='.env' \
-            --exclude='*.local' \
-            -e "$SSH_CMD" \
-            ./ "$REMOTE:$TARGET_PATH/"
-
-      - name: Activate release
-        if: ${{ env.DEPLOY_MODE == 'release-deploy' }}
-        env:
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-          PROD_PORT: ${{ secrets.PROD_PORT }}
-          PROD_PATH: ${{ secrets.PROD_PATH }}
-          DRY_RUN: ${{ env.DEPLOY_DRY_RUN }}
-        run: |
-          set -eu
-          test -n "$PROD_HOST"
-          test -n "$PROD_USER"
-          test -n "$PROD_PATH"
-
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
-          REMOTE="$PROD_USER@$PROD_HOST"
-          THEME_NAME="$(basename "$PROD_PATH")"
-          PARENT_DIR="$(dirname "$PROD_PATH")"
-          RELEASES_DIR="$releases_dir"
-          RELEASE_NAME="$release_name"
-          RELEASE_PATH="$release_path"
-          PRE_RELEASE_BACKUP="${PARENT_DIR}/${THEME_NAME}_pre_releases_backup_${RELEASE_NAME}"
-
-          if [ "$DRY_RUN" = "true" ]; then
-            echo "Dry run: would point $PROD_PATH to $RELEASE_PATH"
-            exit 0
-          fi
-
-          q() { printf '%q' "$1"; }
-          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") RELEASES_DIR=$(q "$RELEASES_DIR") RELEASE_NAME=$(q "$RELEASE_NAME") RELEASE_PATH=$(q "$RELEASE_PATH") PRE_RELEASE_BACKUP=$(q "$PRE_RELEASE_BACKUP") bash -s" <<'REMOTE_ACTIVATE'
-          set -eu
-          test -d "$RELEASE_PATH"
-          mkdir -p "$RELEASES_DIR"
-
-          if [ -L "$PROD_PATH" ]; then
-            previous_target="$(readlink "$PROD_PATH")"
-            printf '%s\n' "$previous_target" > "$RELEASES_DIR/.previous_target"
-          elif [ -e "$PROD_PATH" ]; then
-            mv "$PROD_PATH" "$PRE_RELEASE_BACKUP"
-            printf '%s\n' "$PRE_RELEASE_BACKUP" > "$RELEASES_DIR/.previous_directory"
-          fi
-
-          ln -s "$RELEASE_PATH" "$PROD_PATH.next"
-          mv -Tf "$PROD_PATH.next" "$PROD_PATH"
-          printf '%s\n' "$RELEASE_NAME" > "$RELEASES_DIR/current"
-          echo "Activated release: $RELEASE_NAME"
-          REMOTE_ACTIVATE
-
-      - name: Roll back release
-        if: ${{ env.DEPLOY_MODE == 'release-rollback' }}
-        env:
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-          PROD_PORT: ${{ secrets.PROD_PORT }}
-          PROD_PATH: ${{ secrets.PROD_PATH }}
-          DRY_RUN: ${{ env.DEPLOY_DRY_RUN }}
-          RELEASE_NAME_INPUT: ${{ env.DEPLOY_RELEASE_NAME }}
-        run: |
-          set -eu
-          test -n "$PROD_HOST"
-          test -n "$PROD_USER"
-          test -n "$PROD_PATH"
-
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
-          REMOTE="$PROD_USER@$PROD_HOST"
-          THEME_NAME="$(basename "$PROD_PATH")"
-          PARENT_DIR="$(dirname "$PROD_PATH")"
-          RELEASES_DIR="${PARENT_DIR}/${THEME_NAME}_releases"
-          STAMP="$(date -u +%Y%m%d_%H%M%S)-${GITHUB_SHA::7}"
-          FAILED_LINK="${PARENT_DIR}/${THEME_NAME}_failed_release_link_${STAMP}"
-
-          q() { printf '%q' "$1"; }
-          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") RELEASES_DIR=$(q "$RELEASES_DIR") RELEASE_NAME_INPUT=$(q "$RELEASE_NAME_INPUT") FAILED_LINK=$(q "$FAILED_LINK") DRY_RUN=$(q "$DRY_RUN") bash -s" <<'REMOTE_RELEASE_ROLLBACK'
-          set -eu
-          target=""
-
-          if [ -n "$RELEASE_NAME_INPUT" ]; then
-            target="$RELEASES_DIR/$RELEASE_NAME_INPUT"
-            test -d "$target"
-          elif [ -f "$RELEASES_DIR/.previous_target" ]; then
-            target="$(cat "$RELEASES_DIR/.previous_target")"
-          elif [ -f "$RELEASES_DIR/.previous_directory" ]; then
-            target="$(cat "$RELEASES_DIR/.previous_directory")"
-          else
-            echo "No previous release or directory backup was recorded." >&2
-            exit 1
-          fi
-
-          if [ "$DRY_RUN" = "true" ]; then
-            echo "Dry run: would roll back $PROD_PATH to $target"
-            exit 0
-          fi
-
-          if [ -d "$target" ]; then
-            if [ -L "$PROD_PATH" ]; then
-              ln -s "$target" "$PROD_PATH.next"
-              mv -Tf "$PROD_PATH.next" "$PROD_PATH"
-            else
-              if [ -e "$PROD_PATH" ]; then
-                mv "$PROD_PATH" "$FAILED_LINK"
-              fi
-              cp -a "$target" "$PROD_PATH"
+          for path in \
+            "$PARENT_DIR"/${THEME_NAME}_backup_* \
+            "$PARENT_DIR"/${THEME_NAME}_pre_releases_backup_* \
+            "$PARENT_DIR"/${THEME_NAME}_failed_* \
+            "$PARENT_DIR"/${THEME_NAME}_failed_release_link_* \
+            "$PARENT_DIR"/${THEME_NAME}_failed_healthcheck_* \
+            "$PARENT_DIR"/${THEME_NAME}_releases \
+            "$PARENT_DIR/.${THEME_NAME}_last_backup"; do
+            if [ ! -e "$path" ] && [ ! -L "$path" ]; then
+              continue
             fi
-            echo "Rolled back to: $target"
-          else
-            echo "Rollback target does not exist: $target" >&2
-            exit 1
-          fi
-          REMOTE_RELEASE_ROLLBACK
+            found=$((found + 1))
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "Dry run: would delete $(basename "$path")"
+            else
+              rm -rf -- "$path"
+              echo "Deleted deploy-created theme junk: $(basename "$path")"
+            fi
+          done
 
-      - name: Health check and automatic rollback
-        if: ${{ (env.DEPLOY_MODE == 'backup-deploy' || env.DEPLOY_MODE == 'release-deploy') && env.DEPLOY_DRY_RUN != 'true' }}
+          if [ "$found" -eq 0 ]; then
+            echo "No deploy-created theme junk found."
+          fi
+          REMOTE_CLEAN
+
+      - name: Health check
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' && env.DEPLOY_DRY_RUN != 'true' }}
         env:
           PROD_HEALTHCHECK_URL: ${{ secrets.PROD_HEALTHCHECK_URL }}
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-          PROD_PORT: ${{ secrets.PROD_PORT }}
-          PROD_PATH: ${{ secrets.PROD_PATH }}
-          MODE: ${{ env.DEPLOY_MODE }}
         run: |
           set -eu
           if [ -z "$PROD_HEALTHCHECK_URL" ]; then
-            echo "PROD_HEALTHCHECK_URL is not set. Skipping automatic health check."
+            echo "PROD_HEALTHCHECK_URL is not set. Skipping health check."
             exit 0
           fi
 
-          if curl -fsS --retry 3 --retry-delay 5 "$PROD_HEALTHCHECK_URL" > /dev/null; then
-            echo "Health check passed: $PROD_HEALTHCHECK_URL"
-            exit 0
-          fi
-
-          echo "Health check failed. Starting automatic rollback." >&2
-
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
-          REMOTE="$PROD_USER@$PROD_HOST"
-          THEME_NAME="$(basename "$PROD_PATH")"
-          PARENT_DIR="$(dirname "$PROD_PATH")"
-          RELEASES_DIR="${PARENT_DIR}/${THEME_NAME}_releases"
-          STAMP="$(date -u +%Y%m%d_%H%M%S)-${GITHUB_SHA::7}"
-          FAILED_PATH="${PARENT_DIR}/${THEME_NAME}_failed_healthcheck_${STAMP}"
-
-          q() { printf '%q' "$1"; }
-          $SSH_CMD "$REMOTE" "MODE=$(q "$MODE") PROD_PATH=$(q "$PROD_PATH") PARENT_DIR=$(q "$PARENT_DIR") RELEASES_DIR=$(q "$RELEASES_DIR") FAILED_PATH=$(q "$FAILED_PATH") bash -s" <<'REMOTE_AUTO_ROLLBACK'
-          set -eu
-
-          if [ "$MODE" = "backup-deploy" ]; then
-            backup_name="$(cat "$PARENT_DIR/.ifh_theme_last_backup")"
-            backup_path="$PARENT_DIR/$backup_name"
-            test -e "$backup_path"
-            if [ -e "$PROD_PATH" ] || [ -L "$PROD_PATH" ]; then
-              mv "$PROD_PATH" "$FAILED_PATH"
-            fi
-            cp -a "$backup_path" "$PROD_PATH"
-            echo "Automatically restored backup: $backup_path"
-            exit 0
-          fi
-
-          if [ "$MODE" = "release-deploy" ]; then
-            if [ -f "$RELEASES_DIR/.previous_target" ]; then
-              target="$(cat "$RELEASES_DIR/.previous_target")"
-              test -d "$target"
-              ln -s "$target" "$PROD_PATH.next"
-              mv -Tf "$PROD_PATH.next" "$PROD_PATH"
-              echo "Automatically switched back to previous release target: $target"
-              exit 0
-            fi
-
-            if [ -f "$RELEASES_DIR/.previous_directory" ]; then
-              target="$(cat "$RELEASES_DIR/.previous_directory")"
-              test -d "$target"
-              if [ -e "$PROD_PATH" ] || [ -L "$PROD_PATH" ]; then
-                mv "$PROD_PATH" "$FAILED_PATH"
-              fi
-              mv "$target" "$PROD_PATH"
-              echo "Automatically restored previous theme directory: $target"
-              exit 0
-            fi
-          fi
-
-          echo "No rollback target was found." >&2
-          exit 1
-          REMOTE_AUTO_ROLLBACK
-
-          exit 1
+          curl -fsS --retry 3 --retry-delay 5 "$PROD_HEALTHCHECK_URL" > /dev/null
+          echo "Health check passed: $PROD_HEALTHCHECK_URL"
