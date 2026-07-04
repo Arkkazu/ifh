@@ -3,7 +3,7 @@ get_header();
 ?>
 
 <body class="max-pc:pb-60">
-  <?php //get_template_part('inc', 'header' ); 
+  <?php //get_template_part('inc', 'header' );
   ?>
   <main class="pb-80 pc:pb-160 overflow-hidden">
 
@@ -15,15 +15,15 @@ get_header();
         <div class="">
           <picture>
             <!-- スマホ用の画像: 画面幅が767px以下の場合に使用 -->
-            <source media="(max-width: 767px)" srcset="/wp-content/themes/ifh_theme/media/images/furisode/furisode_top_vol4_sp.webp">
+            <source media="(max-width: 767px)" srcset="/wp-content/themes/ifh_theme/media/images/furisode/furisode_top_vol5_sp.webp">
             <!-- デフォルトの画像: それ以外の場合に使用 -->
-            <img src="/wp-content/themes/ifh_theme/media/images/furisode/furisode_top_vol.4_PC.webp" alt="" class="p-furisode-kv__img" width="1919" height="961">
+            <img src="/wp-content/themes/ifh_theme/media/images/furisode/furisode_top_vol.5_PC.webp" alt="" class="p-furisode-kv__img" width="1919" height="961">
           </picture>
 
         </div>
-        <div class="absolute top-[67%] md:top-[28%] left-[12%] md:left-[32%] w-[76%] md:w-[29.5%]">
+        <!-- <div class="absolute top-[67%] md:top-[28%] left-[12%] md:left-[32%] w-[76%] md:w-[29.5%]">
           <img class='w-full' src='/wp-content/themes/ifh_theme/media/images/furisode/soudankai.svg' alt='' width='569' height='474'>
-        </div>
+        </div> -->
       </div>
       <!-- <div class="p-furisode-kv__spTtl">
           <img src="/wp-content/themes/ifh_theme/assets/media/images/furisode/main-ttl-sp.svg" alt="" class="p-furisode-kv__spTtl-img" width="297" height="115">
@@ -40,16 +40,16 @@ get_header();
       </div> -->
 
 
-    <div class="mt-64 mx-auto max-w-1300 pc:px-50">
+    <div class="pc:mt-64 mx-auto max-w-1300 pc:px-50">
 
-      <div class="px-20 py-32 pc:p-32 bg-[#0c3f3c] flex flex-col items-center">
+      <div class="px-20 py-32 pc:p-32 bg-gradient-to-r from-[#6dc1c3] to-[#1bb8ce] flex flex-col items-center">
         <h2 class="text-21 pc:text-24 text-white text-center">
           ご来場特典
         </h2>
         <div class="mt-16 w-full">
-          <div class="mx-auto pc:w-900 border-t border-[#ab8f4a] pt-16 flex flex-col items-center">
+          <div class="mx-auto pc:w-900 border-t border-white pt-16 flex flex-col items-center">
             <p class="text-15 pc:text-18 text-white text-center">
-              無料振袖相談会にご来場で<br class="md:hidden">選べる特典プレゼント!!
+              無料振袖相談会にご来場の全てのお客様に<br class="md:hidden">選べる特典プレゼント!!
             </p>
             <div class="mt-8">
               <p class="text-12 text-white">
@@ -131,8 +131,18 @@ get_header();
       <div class="mx-auto px-24">
 
         <div class="mx-auto max-w-270 md:max-w-1200">
-          <div class="max-md:-ml-53 relative bg-[#c92a1d] w-308 md:w-full max-w-1148 h-40 flex items-center pl-24">
-            <div class="absolute max-md:top-0 mg:bottom-0 right-0 translate-x-1/2 -translate-y-1/2 md:translate-y-1/2 dot-grid w-104 h-32"></div>
+          <div class="max-md:-ml-53 relative bg-[#e23362] w-308 md:w-full max-w-1148 h-40 flex items-center pl-24">
+            <!-- 通常表示用：ピンクのSVG -->
+            <img class="absolute top-[75%] right-0 -translate-y-1/2 w-160 aspect-[186/198]" src="/wp-content/themes/ifh_theme/media/images/furisode/hato-only.svg" alt="" width="186" height="198">
+            <!-- 背景色と重なる範囲だけ白くする用 -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+              <img
+                class="absolute top-[75%] right-0 -translate-y-1/2 w-160 aspect-[186/198] brightness-0 invert"
+                src="/wp-content/themes/ifh_theme/media/images/furisode/hato-only.svg"
+                alt=""
+                width="186"
+                height="198">
+            </div>
             <p class="relative text-18 text-white">
               rental full pack PLAN
             </p>
@@ -155,7 +165,7 @@ get_header();
             </p>
 
             <div class="mt-24 flex max-pc:flex-col items-center justify-center gap-x-10 pc:gap-x-20 gap-y-10">
-              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-[#ab8f4a] flex justify-center items-center">
+              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] flex justify-center items-center">
                 <div class="text-white flex items-center gap-x-24 pc:gap-x-8">
                   <span class="text-40 font-noto-serif leading-none italic">01</span>
                   <span class="text-18 pc:text-20 font-noto-sans font-medium leading-[1.3] w-170 pc:w-auto flex justify-center">振袖コーディネート</span>
@@ -168,7 +178,7 @@ get_header();
                   <polygon class="cls-1" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
                 </g>
               </svg>
-              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-[#ab8f4a] flex justify-center items-center">
+              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] flex justify-center items-center">
                 <div class="text-white flex items-center gap-x-24 pc:gap-x-16">
                   <span class="text-40 font-noto-serif leading-none italic">02</span>
                   <span class="text-18 pc:text-20 font-noto-sans font-medium w-170 pc:w-auto flex justify-center">前撮り</span>
@@ -180,7 +190,7 @@ get_header();
                   <polygon class="cls-1" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
                 </g>
               </svg>
-              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-[#ab8f4a] flex justify-center items-center">
+              <div class="px-16 pc:max-w-300 w-full h-48 pc:h-60 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] flex justify-center items-center">
                 <div class="text-white flex items-center gap-x-24 pc:gap-x-16">
                   <span class="text-40 font-noto-serif leading-none italic">03</span>
                   <span class="text-18 pc:text-20 font-noto-sans font-medium w-170 pc:w-auto flex justify-center">成人式当日</span>
@@ -188,7 +198,7 @@ get_header();
               </div>
             </div>
 
-            <div class="mt-32 pc: bg-[#0c3f3c] p-16 text-white font-noto-serif">
+            <div class="mt-32 pc: bg-[#c8e7e9] p-16 font-noto-serif">
               <div class="text-16 text-center font-bold">パック内容<span class="u-sp-hide">　</span><span class="u-ib">（前撮り & 成人式当日）</span></div>
               <ul class="mt-20 md:px-64 flex flex-wrap gap-x-16 pc:gap-x-32 gap-y-16">
                 <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] w-full md:w-auto">□ 振袖・帯・小物一式</li>
@@ -196,34 +206,34 @@ get_header();
                 <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] w-[calc((100%-16rem)/2)] md:w-auto">□ ヘアメイク</li>
                 <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] w-[calc((100%-16rem)/2)] md:w-auto">□ ネイル</li>
                 <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] w-[calc((100%-16rem)/2)] md:w-auto">□ アイラッシュ</li>
-                <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] whitespace-pre-wrap break-keep">□ 前撮り写真ウッドフレーム（2L）<wbr>サービス</li>
+                <li class="text-14 pc:text-16 font-normal -indent-[1.5em] pl-[1.5em] whitespace-pre-wrap break-keep">□ 前撮り10P アルバムプレゼント</li>
               </ul>
             </div>
 
             <div class="mt-32 pc:mt-40">
               <div class="flex max-md:flex-col gap-y-32 gap-x-64">
-                <button class="js-modal-trigger md:grow border border-black flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-1">
-                  <span class="max-md:w-172 pb-[0.1em] font-normal">フルパックプラン詳細</span>
+                <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-1">
+                  <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">フルパックプラン詳細</span>
                   <div class="flex items-center gap-x-8">
                     <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
                       <g>
-                        <polygon class="cls-1" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
-                        <polygon class="cls-1" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
+                        <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
+                        <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
                       </g>
                     </svg>
-                    <span class="pb-[0.1em] font-normal">more</span>
+                    <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
                   </div>
                 </button>
-                <button class="js-modal-trigger md:grow border border-black flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-2">
-                  <span class="max-md:w-172 pb-[0.1em] font-normal">ママ振プラン詳細</span>
+                <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-2">
+                  <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">ママ振プラン詳細</span>
                   <div class="flex items-center gap-x-8">
                     <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
                       <g>
-                        <polygon class="cls-1" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
-                        <polygon class="cls-1" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
+                        <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
+                        <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
                       </g>
                     </svg>
-                    <span class="pb-[0.1em] font-normal">more</span>
+                    <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
                   </div>
                 </button>
               </div>
@@ -239,12 +249,14 @@ get_header();
           <div class="splide splide-furisode">
             <div class="splide__track">
               <ul class="splide__list">
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_1.webp" alt="スライド1" width="2000" height="2999"></li>
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_2.webp" alt="スライド1" width="2000" height="2999"></li>
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_3.webp" alt="スライド1" width="2000" height="2999"></li>
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_4.webp" alt="スライド1" width="2000" height="2999"></li>
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_5.webp" alt="スライド1" width="2000" height="2999"></li>
-                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/photo_6.webp" alt="スライド1" width="2000" height="2999"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_1@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_2@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_3@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_4@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_5@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_6@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_7@2x.webp" alt="振袖女性"></li>
+                <li class="splide__slide"><img src="/wp-content/themes/ifh_theme/media/images/furisode/model_8@2x.webp" alt="振袖女性"></li>
               </ul>
             </div>
           </div>
@@ -256,10 +268,10 @@ get_header();
     <section class="mt-80 pc:mt-160">
       <div class="mx-auto max-w-1200">
 
-        <div class="bg-[#0c3f3c] pt-40 px-15 pc:px-25 pb-30">
+        <div class="bg-gradient-to-r from-[#6dc1c3] to-[#1bb8ce] pt-40 px-15 pc:px-25 pb-30">
 
           <div class="mx-auto max-w-900">
-            <h2 class="text-21 md:text-24 text-white font-noto-sans text-center border-b border-[#ab8f4a] pb-12">無料振袖相談会ご予約特典</h2>
+            <h2 class="text-21 md:text-24 text-white font-noto-sans text-center border-b border-white pb-12">無料振袖相談会ご予約特典</h2>
             <div class="mt-12 flex max-pc:flex-col lg:flex-row justify-center items-start lg:items-center gap-y-8 gap-x-40">
               <p class="max-pc:w-full text-16 md:text-18 text-center text-white ">無料振袖相談会にご参加いただいた方だけの<br class="md:hidden">特別な特典になります</p>
               <p class="max-pc:w-full text-12 md:text-14 text-white text-center">※定員になり次第締め切らせて頂きます</p>
@@ -281,14 +293,14 @@ get_header();
                 </div>
               </div>
 
-              <p class="mt-40 text-20 md:text-22 text-[#c92a1d] font-noto-sans text-coral text-center">
+              <p class="mt-40 text-20 md:text-22 text-[#ff184c] font-medium font-noto-sans text-coral text-center">
                 【相談会当日特典】<br>
                 スタイリストによる<br>
                 ヘアセット無料体験</p>
 
               <p class="js-furisode-card-desc mt-40 text-16 md:text-18 font-medium font-noto-serif">相談会で選んだお着物に合わせてプロの現役スタイリストがヘアメイク♪成人式当日の具体的なイメージがついて安心です</p>
 
-              <div class="mt-40 bg-[#ab8f4a] py-16 px-8 text-white">
+              <div class="mt-40 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] py-16 px-8 text-white">
                 <div class="relative flex justify-center text-18 text-white font-noto-serif">
                   <span class="absolute top-1/2 left-0 -translate-y-1/2 w-[calc((100%-8em)/2)] h-px bg-white"></span>
                   <span class="absolute top-1/2 right-0 -translate-y-1/2 w-[calc((100%-8em)/2)] h-px bg-white"></span>
@@ -325,7 +337,7 @@ get_header();
                 </div>
               </div>
 
-              <p class="mt-40 text-20 md:text-22 text-[#c92a1d] font-noto-sans text-coral text-center">
+              <p class="mt-40 text-20 md:text-22 text-[#ff184c] font-medium font-noto-sans text-coral text-center">
                 【相談会ご成約特典】<br>
                 前撮りと成人式当日の<br>
                 ネイル＆アイラッシュ無料!!
@@ -335,7 +347,7 @@ get_header();
                 前撮りと成人式当日のネイル&アイラッシュまたはまつ毛パーマが無料！トータルでかわいい成人式を迎えられます
               </p>
 
-              <div class="mt-40 bg-[#ab8f4a] py-16 px-8 text-white">
+              <div class="mt-40 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] py-16 px-8 text-white">
                 <div class="relative flex justify-center text-18 text-white font-noto-serif">
                   <span class="absolute top-1/2 left-0 -translate-y-1/2 w-[calc((100%-13em)/2)] h-px bg-white"></span>
                   <span class="absolute top-1/2 right-0 -translate-y-1/2 w-[calc((100%-13em)/2)] h-px bg-white"></span>
@@ -377,7 +389,7 @@ get_header();
                 </div>
               </div>
 
-              <p class="mt-40 text-20 md:text-22 text-[#c92a1d] font-noto-sans text-coral text-center">
+              <p class="mt-40 text-20 md:text-22 text-[#ff184c] font-medium font-noto-sans text-coral text-center">
                 【相談会ご成約特典】<br>
                 お着物無料点検＆<br>
                 お手入れサービス
@@ -387,7 +399,7 @@ get_header();
                 既にお着物をお持ちの方やママ振プランの方は京都の職人が丁寧に点検し、寸法直しやカビ落とし、シミ落としなどお手入れのお見積もりをその場でいたします
               </p>
 
-              <div class="mt-40 bg-[#ab8f4a] py-16 px-8 text-white">
+              <div class="mt-40 bg-gradient-to-r from-[#ff9aab] to-[#ff184c] py-16 px-8 text-white">
                 <div class="relative flex justify-center text-18 text-white font-noto-serif">
                   <span class="absolute top-1/2 left-0 -translate-y-1/2 w-[calc((100%-9em)/2)] h-px bg-white"></span>
                   <span class="absolute top-1/2 right-0 -translate-y-1/2 w-[calc((100%-9em)/2)] h-px bg-white"></span>
@@ -427,23 +439,23 @@ get_header();
     </section>
 
     <section class="mt-80 pc:mt-160">
-      <div class="relative mx-auto max-w-1200 pt-32 pc:pt-64 px-24 aspect-[1500/4476] md:aspect-[2400/1250] bg-[url('/wp-content/themes/ifh_theme/media/images/furisode/furisode_totalbeauty_SP.webp')] md:bg-[url('/wp-content/themes/ifh_theme/media/images/furisode/furisode_totalbeauty_vol4_PC.webp')] bg-cover bg-center">
+      <div class="relative mx-auto max-w-1200 pt-32 pc:pt-64 px-24 aspect-[1500/4476] md:aspect-[2400/1250] bg-[url('/wp-content/themes/ifh_theme/media/images/furisode/furisode_totalbeauty_SP@2x.webp')] md:bg-[url('/wp-content/themes/ifh_theme/media/images/furisode/furisode25_totalbeauty_PC@2x.webp')] bg-cover bg-center">
         <div class="flex justify-center">
           <h2 class="pb-4 border-b border-black text-18 pc:text-20 text-center">トータルビューティーサロン <span class="inline-block">Ifh groupの成人式はココが違う</span></h2>
         </div>
-        <div class="js-fade absolute left-24 md:left-8 pc:left-40 top-120 md:top-80 pc:top-140 bg-gradient-to-bl from-[#c92a1d] to-[#e67c7a] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
+        <div class="js-fade absolute left-24 md:left-8 pc:left-[8%] top-120 md:top-80 pc:top-140 bg-gradient-to-l from-[#ff9aab] to-[#ff184c] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
           <p class="text-16 pc:text-18 text-center text-white font-noto-serif leading-[1.8]">流行やおしゃれに<br>
             感度の高い<br>
             現役スタイリストが<br>
             ヘアメイク</p>
         </div>
-        <div class="js-fade absolute left-150 md:left-184 pc:left-280 top-300 md:top-196 pc:top-360 bg-gradient-to-bl from-[#c92a1d] to-[#e67c7a] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
+        <div class="js-fade absolute left-150 md:left-184 pc:left-[26%] top-300 md:top-196 pc:top-360 bg-gradient-to-l from-[#ff9aab] to-[#ff184c] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
           <p class="text-16 pc:text-18 text-center text-white font-noto-serif leading-[1.8]">ネイルも<br>
             アイラッシュも<br>
             トータルで<br>
             コーディネート</p>
         </div>
-        <div class="js-fade absolute left-24 md:left-380 pc:left-560 top-480 md:top-130 pc:top-200 bg-gradient-to-bl from-[#c92a1d] to-[#e67c7a] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
+        <div class="js-fade absolute left-24 md:left-[40%] pc:left-560 top-480 md:top-130 pc:top-200 bg-gradient-to-l from-[#ff9aab] to-[#ff184c] w-200 pc:w-240 shrink-0 aspect-square rounded-full flex justify-center items-center">
           <p class="text-16 pc:text-18 text-center text-white font-noto-serif leading-[1.8]">京都の老舗呉服店<br>
             と提携<br>
             100点以上の<br>
@@ -522,41 +534,21 @@ get_header();
           Ifh group Salon list
         </h2>
 
-        <div class="mt-40 pc:mt-80 mx-auto max-w-780 flex flex-wrap gap-40 pc:gap-120">
-          <div class="w-full md:w-[calc((100%-40rem)/2)] pc:w-[calc((100%-120rem)/2)] text-center font-noto-serif">
-            <div class="text-20 pc:text-22 border-b border-[#9e9d9d]">
-              Ifh honten
-            </div>
-            <div class="text-16 pc:text-18">
-              〒370-3521高崎市棟高町1802-306
-            </div>
-          </div>
-          <div class="w-full md:w-[calc((100%-40rem)/2)] pc:w-[calc((100%-120rem)/2)] text-center font-noto-serif">
-            <div class="text-20 pc:text-22 border-b border-[#9e9d9d]">
-              Ifh honten iizuka
-            </div>
-            <div class="text-16 pc:text-18">
-              〒370-0069高崎市飯塚町222-3
-            </div>
-          </div>
-          <div class="w-full md:w-[calc((100%-40rem)/2)] pc:w-[calc((100%-120rem)/2)] text-center font-noto-serif">
-            <div class="text-20 pc:text-22 border-b border-[#9e9d9d]">
-              BIANCA maebashi
-            </div>
-            <div class="text-16 pc:text-18">
-              〒371-0846前橋市元総社町1983
-            </div>
-          </div>
-          <div class="w-full md:w-[calc((100%-40rem)/2)] pc:w-[calc((100%-120rem)/2)] text-center font-noto-serif">
-            <div class="text-20 pc:text-22 border-b border-[#9e9d9d]">
-              BIANCA isesaki
-            </div>
-            <div class="text-16 pc:text-18">
-              〒372-0007伊勢崎市安堀町207-1
+        <div class="mt-40 pc:mt-80 mx-auto max-w-780 flex flex-wrap">
+          <div class="w-full text-center font-noto-serif">
+            <div class="text-20 pc:text-22">
+              Ifh honten / Ifh honten iizuka / BIANCA maebashi / BIANCA isesaki
             </div>
           </div>
 
-          <div class="max-pc:fixed max-pc:left-0 max-pc:bottom-0 w-full flex pc:justify-center gap-x-0 pc:gap-x-80">
+          <div class="mt-40 pc:mt-80 mx-auto w-full max-w-600 bg-gradient-to-l from-[#ff9aab] to-[#ff184c] p-24 rounded-8">
+            <p class="text-white text-center font-medium leading-[1.8]">
+              成人式に関するお問い合わせ・ご質問・ご予約は<br>
+              <span class="text-20 font-semibold border-b-2 border-white">公式 LINE</span> よりお願いいたします
+            </p>
+          </div>
+
+          <div class="mt-40 pc:mt-120 max-pc:fixed max-pc:left-0 max-pc:bottom-0 w-full flex pc:justify-center gap-x-0 pc:gap-x-80">
             <a class="max-pc:w-1/2 flex max-pc:bg-[#fad7d4]" href="https://www.instagram.com/ifh_kimono/" target='_blank'>
               <picture>
                 <source media='(min-width: 768px)' srcset='/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-bannerinsta.svg'>
@@ -594,10 +586,10 @@ get_header();
     </div>
   </div>
   <div id="modal-content-1" class="hidden">
-    <img class="w-full" src="/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-plan01.svg" alt="" width="352" height="951">
+    <img class="w-full" src="/wp-content/themes/ifh_theme/media/images/furisode/svg-plan01.svg" alt="" width="352" height="951">
   </div>
   <div id="modal-content-2" class="hidden">
-    <img class="w-full" src="/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-plan02.svg" alt="" width="352" height="730">
+    <img class="w-full" src="/wp-content/themes/ifh_theme/media/images/furisode/svg-plan02.svg" alt="" width="352" height="730">
   </div>
   <?php get_template_part('inc', 'sp-menu'); ?>
 
