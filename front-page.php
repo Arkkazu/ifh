@@ -6,7 +6,7 @@ get_header();
 <body <?php body_class('relative h-full flex flex-col overflow-hidden'); ?>>
   <?php get_template_part('inc', 'header'); ?>
 
-  <div class="js-scroll-container mt-60 pc:mt-90 flex-1 overflow-x-hidden flex flex-col justify-between">
+  <div class="js-scroll-container mt-60 pc:mt-90 flex-1 overflow-x-hidden flex flex-col justify-between max-pc:pb-[calc(100vw_*_(250_/_1563))]">
     <main class="pb-80 pc:pb-160">
 
       <div class="splide splide-home-kv h-[calc(100dvh-60rem)] pc:h-[calc(100dvh-90rem)] overflow-hidden">
