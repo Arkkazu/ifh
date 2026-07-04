@@ -186,6 +186,26 @@ jobs:
               }
               echo "Updated $option_name to $theme\n";
           }
+
+          foreach (array(
+              '_site_transient_theme_roots',
+              '_site_transient_timeout_theme_roots',
+              '_transient_theme_roots',
+              '_transient_timeout_theme_roots',
+              'template_root',
+              'stylesheet_root'
+          ) as $cache_option_name) {
+              $wpdb->delete($wpdb->options, array('option_name' => $cache_option_name), array('%s'));
+              echo "Deleted option cache $cache_option_name\n";
+              if (!empty($wpdb->sitemeta)) {
+                  $wpdb->delete($wpdb->sitemeta, array('meta_key' => $cache_option_name), array('%s'));
+              }
+          }
+
+          if (function_exists('wp_cache_flush')) {
+              wp_cache_flush();
+              echo "Flushed WordPress object cache\n";
+          }
           PHP_SHORTINIT_REPAIR
             echo "Repaired WordPress active theme options with SHORTINIT: $THEME_NAME"
             exit 0
@@ -420,6 +440,26 @@ jobs:
                   exit(1);
               }
               echo "Updated $option_name to $theme\n";
+          }
+
+          foreach (array(
+              '_site_transient_theme_roots',
+              '_site_transient_timeout_theme_roots',
+              '_transient_theme_roots',
+              '_transient_timeout_theme_roots',
+              'template_root',
+              'stylesheet_root'
+          ) as $cache_option_name) {
+              $wpdb->delete($wpdb->options, array('option_name' => $cache_option_name), array('%s'));
+              echo "Deleted option cache $cache_option_name\n";
+              if (!empty($wpdb->sitemeta)) {
+                  $wpdb->delete($wpdb->sitemeta, array('meta_key' => $cache_option_name), array('%s'));
+              }
+          }
+
+          if (function_exists('wp_cache_flush')) {
+              wp_cache_flush();
+              echo "Flushed WordPress object cache\n";
           }
           PHP_SHORTINIT_REPAIR
             echo "Repaired WordPress active theme options with SHORTINIT: $THEME_NAME"
