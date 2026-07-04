@@ -75,7 +75,20 @@ add_action('wp_enqueue_scripts', function () {
       );
       break;
     } elseif (file_exists($prod_path)) {
-      $page_script = basename($rel_path, '.js') . '.js';
+      $page_base = basename($rel_path, '.js');
+      $page_style = $page_base . '.css';
+      $page_style_path = get_template_directory() . '/dist/assets/' . $page_style;
+
+      if (file_exists($page_style_path)) {
+        wp_enqueue_style(
+          'page-style',
+          $vite . '/' . $page_style,
+          [],
+          $asset_version($page_style)
+        );
+      }
+
+      $page_script = $page_base . '.js';
 
       wp_enqueue_script(
         'page-script',
