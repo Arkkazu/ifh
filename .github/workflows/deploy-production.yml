@@ -179,7 +179,7 @@ jobs:
           $config_path = $wp_root . '/wp-config.php';
           $config = file_get_contents($config_path);
           if ($config === false) {
-              fwrite(STDERR, "Failed to read wp-config.php\n");
+              echo "Failed to read wp-config.php\n";
               exit(1);
           }
 
@@ -192,7 +192,7 @@ jobs:
           };
 
           if (!preg_match('/\\$table_prefix\\s*=\\s*([\'\"])(.*?)\\1\\s*;/s', $config, $prefix_matches)) {
-              fwrite(STDERR, "Missing table_prefix\n");
+              echo "Missing table_prefix\n";
               exit(1);
           }
 
@@ -223,21 +223,21 @@ jobs:
               $mysqli = @new mysqli($db_host, $db_user, $db_password, $db_name);
           }
           if ($mysqli->connect_errno) {
-              fwrite(STDERR, "DB connect failed: " . $mysqli->connect_error . "\n");
+              echo "DB connect failed: " . $mysqli->connect_error . "\n";
               exit(1);
           }
 
           $table = '`' . str_replace('`', '``', $prefix . 'options') . '`';
           $stmt = $mysqli->prepare("UPDATE $table SET option_value = ? WHERE option_name = ?");
           if (!$stmt) {
-              fwrite(STDERR, "Prepare failed: " . $mysqli->error . "\n");
+              echo "Prepare failed: " . $mysqli->error . "\n";
               exit(1);
           }
 
           foreach (['template', 'stylesheet'] as $option_name) {
               $stmt->bind_param('ss', $theme, $option_name);
               if (!$stmt->execute()) {
-                  fwrite(STDERR, "Update failed for $option_name: " . $stmt->error . "\n");
+                  echo "Update failed for $option_name: " . $stmt->error . "\n";
                   exit(1);
               }
               echo "Updated $option_name to $theme\n";
