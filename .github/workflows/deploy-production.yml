@@ -80,6 +80,7 @@ jobs:
           test -n "$PROD_HOST"
           test -n "$PROD_USER"
           test -n "$PROD_PATH"
+          PROD_PATH="${PROD_PATH%/}"
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
           REMOTE="$PROD_USER@$PROD_HOST"
@@ -134,6 +135,7 @@ jobs:
           test -n "$PROD_HOST"
           test -n "$PROD_USER"
           test -n "$PROD_PATH"
+          PROD_PATH="${PROD_PATH%/}"
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
           REMOTE="$PROD_USER@$PROD_HOST"
