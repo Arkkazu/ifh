@@ -14,7 +14,6 @@ on:
         options:
           - backup-deploy
           - backup-restore
-          - release-deploy
           - release-rollback
       dry_run:
         description: "Preview changes without changing production"
@@ -26,7 +25,7 @@ on:
         required: false
         type: string
       release_name:
-        description: "Release folder name for release-deploy or release-rollback. Empty auto-generates or uses the previous release."
+        description: "Release folder name for release-rollback. Empty uses the previous release."
         required: false
         type: string
 
@@ -39,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      DEPLOY_MODE: ${{ github.event_name == 'push' && 'release-deploy' || inputs.mode }}
+      DEPLOY_MODE: ${{ github.event_name == 'push' && 'backup-deploy' || inputs.mode }}
       DEPLOY_DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
       DEPLOY_BACKUP_NAME: ${{ github.event_name == 'push' && '' || inputs.backup_name }}
       DEPLOY_RELEASE_NAME: ${{ github.event_name == 'push' && '' || inputs.release_name }}
@@ -108,7 +107,20 @@ jobs:
             $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") BACKUP_PATH=$(q "$BACKUP_PATH") PARENT_DIR=$(q "$PARENT_DIR") BACKUP_NAME=$(q "$BACKUP_NAME") bash -s" <<'REMOTE_BACKUP'
           set -eu
           mkdir -p "$PARENT_DIR"
-          if [ -e "$PROD_PATH" ] || [ -L "$PROD_PATH" ]; then
+          if [ -L "$PROD_PATH" ]; then
+            link_target="$(readlink "$PROD_PATH")"
+            case "$link_target" in
+              /*) backup_source="$link_target" ;;
+              *) backup_source="$PARENT_DIR/$link_target" ;;
+            esac
+            test -d "$backup_source"
+            cp -a "$backup_source" "$BACKUP_PATH"
+            rm "$PROD_PATH"
+            mkdir -p "$PROD_PATH"
+            printf '%s\n' "$BACKUP_NAME" > "$PARENT_DIR/.ifh_theme_last_backup"
+            echo "Converted production theme symlink to regular directory: $PROD_PATH"
+            echo "Created backup from symlink target: $BACKUP_PATH"
+          elif [ -e "$PROD_PATH" ]; then
             cp -a "$PROD_PATH" "$BACKUP_PATH"
             printf '%s\n' "$BACKUP_NAME" > "$PARENT_DIR/.ifh_theme_last_backup"
             echo "Created backup: $BACKUP_PATH"
