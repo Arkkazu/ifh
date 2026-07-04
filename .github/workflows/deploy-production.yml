@@ -305,6 +305,49 @@ jobs:
           echo "Neither wp nor php command is available for theme option repair." >&2
           exit 1
           REMOTE_REPAIR_THEME
+      - name: Reset production PHP OPcache
+        if: ${{ env.DEPLOY_MODE == 'direct-deploy' && env.DEPLOY_DRY_RUN != 'true' }}
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PORT: ${{ secrets.PROD_PORT }}
+          PROD_PATH: ${{ secrets.PROD_PATH }}
+          PROD_HEALTHCHECK_URL: ${{ secrets.PROD_HEALTHCHECK_URL }}
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_USER"
+          test -n "$PROD_PATH"
+          PROD_PATH="${PROD_PATH%/}"
+          THEME_NAME="$(basename "$PROD_PATH")"
+          RESET_NAME=".deploy-opcache-reset-${GITHUB_SHA::12}.php"
+
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          REMOTE="$PROD_USER@$PROD_HOST"
+
+          q() { printf '%q' "$1"; }
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") RESET_NAME=$(q "$RESET_NAME") bash -s" <<'REMOTE_OPCACHE_FILE'
+          set -eu
+          cat > "$PROD_PATH/$RESET_NAME" <<'PHP_OPCACHE_RESET'
+          <?php
+          header('Content-Type: text/plain; charset=UTF-8');
+          if (function_exists('opcache_reset')) {
+              echo opcache_reset() ? 'opcache_reset=ok' : 'opcache_reset=false';
+          } else {
+              echo 'opcache_reset=unavailable';
+          }
+          PHP_OPCACHE_RESET
+          REMOTE_OPCACHE_FILE
+
+          if [ -n "$PROD_HEALTHCHECK_URL" ]; then
+            ORIGIN="$(printf '%s' "$PROD_HEALTHCHECK_URL" | sed -E 's#^(https?://[^/]+).*#\1#')"
+            curl -fsS "$ORIGIN/wp-content/themes/$THEME_NAME/$RESET_NAME"
+            echo
+          else
+            echo "PROD_HEALTHCHECK_URL is not set. Skipping web OPcache reset request."
+          fi
+
+          $SSH_CMD "$REMOTE" "PROD_PATH=$(q "$PROD_PATH") RESET_NAME=$(q "$RESET_NAME") rm -f \"\$PROD_PATH/\$RESET_NAME\""
       - name: Clean old deploy theme folders
         if: ${{ env.DEPLOY_MODE == 'cleanup-theme-junk' }}
         env:
