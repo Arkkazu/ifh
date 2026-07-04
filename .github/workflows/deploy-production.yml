@@ -155,6 +155,41 @@ jobs:
             exit 0
           fi
 
+          PHP_BIN=""
+          for candidate in /opt/php-8.3.30/bin/php /opt/php-8.3/bin/php /usr/bin/php8.3 /usr/local/bin/php8.3 php8.3 php83; do
+            if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -r 'exit(version_compare(PHP_VERSION, "8.0.0", ">=") ? 0 : 1);' >/dev/null 2>&1; then
+              PHP_BIN="$(command -v "$candidate")"
+              break
+            fi
+          done
+
+          if [ -n "$PHP_BIN" ]; then
+            echo "Using PHP binary for SHORTINIT repair: $PHP_BIN"
+            WP_ROOT="$WP_ROOT" THEME_NAME="$THEME_NAME" "$PHP_BIN" <<'PHP_SHORTINIT_REPAIR'
+          <?php
+          define('SHORTINIT', true);
+          require getenv('WP_ROOT') . '/wp-load.php';
+
+          global $wpdb;
+          $theme = getenv('THEME_NAME');
+          foreach (array('template', 'stylesheet') as $option_name) {
+              $result = $wpdb->update(
+                  $wpdb->options,
+                  array('option_value' => $theme),
+                  array('option_name' => $option_name),
+                  array('%s'),
+                  array('%s')
+              );
+              if ($result === false) {
+                  echo "Update failed for $option_name: " . $wpdb->last_error . "\n";
+                  exit(1);
+              }
+              echo "Updated $option_name to $theme\n";
+          }
+          PHP_SHORTINIT_REPAIR
+            echo "Repaired WordPress active theme options with SHORTINIT: $THEME_NAME"
+            exit 0
+          fi
           if command -v wp >/dev/null 2>&1; then
             cd "$WP_ROOT"
             set +e
@@ -355,6 +390,41 @@ jobs:
           fi
 
           echo "== wp cli =="
+          PHP_BIN=""
+          for candidate in /opt/php-8.3.30/bin/php /opt/php-8.3/bin/php /usr/bin/php8.3 /usr/local/bin/php8.3 php8.3 php83; do
+            if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -r 'exit(version_compare(PHP_VERSION, "8.0.0", ">=") ? 0 : 1);' >/dev/null 2>&1; then
+              PHP_BIN="$(command -v "$candidate")"
+              break
+            fi
+          done
+
+          if [ -n "$PHP_BIN" ]; then
+            echo "Using PHP binary for SHORTINIT repair: $PHP_BIN"
+            WP_ROOT="$WP_ROOT" THEME_NAME="$THEME_NAME" "$PHP_BIN" <<'PHP_SHORTINIT_REPAIR'
+          <?php
+          define('SHORTINIT', true);
+          require getenv('WP_ROOT') . '/wp-load.php';
+
+          global $wpdb;
+          $theme = getenv('THEME_NAME');
+          foreach (array('template', 'stylesheet') as $option_name) {
+              $result = $wpdb->update(
+                  $wpdb->options,
+                  array('option_value' => $theme),
+                  array('option_name' => $option_name),
+                  array('%s'),
+                  array('%s')
+              );
+              if ($result === false) {
+                  echo "Update failed for $option_name: " . $wpdb->last_error . "\n";
+                  exit(1);
+              }
+              echo "Updated $option_name to $theme\n";
+          }
+          PHP_SHORTINIT_REPAIR
+            echo "Repaired WordPress active theme options with SHORTINIT: $THEME_NAME"
+            exit 0
+          fi
           if command -v wp >/dev/null 2>&1; then
             (cd "$WP_ROOT" && wp theme list --allow-root) || true
             (cd "$WP_ROOT" && wp option get template --allow-root) || true
