@@ -2,7 +2,7 @@
 get_header();
 ?>
 
-<body class="max-pc:pb-60">
+<body class="max-pc:pb-68">
   <?php //get_template_part('inc', 'header' );
   ?>
   <main class="pb-80 pc:pb-160 overflow-hidden">
@@ -127,17 +127,17 @@ get_header();
 
     </div>
 
-    <section class="mt-80 p-furisode-plan-sec">
+    <section class="pc:mt-80 p-furisode-plan-sec">
       <div class="mx-auto px-24">
 
-        <div class="mx-auto max-w-270 md:max-w-1200">
-          <div class="max-md:-ml-53 relative bg-[#e23362] w-308 md:w-full max-w-1148 h-40 flex items-center pl-24">
+        <div class="-mx-24 pc:mx-auto max-w-[calc(100%+48rem)] pc:max-w-1200">
+          <div class=" relative bg-[#e23362] w-full h-40 flex items-center pl-44 pc:pl-24">
             <!-- 通常表示用：ピンクのSVG -->
-            <img class="absolute top-[75%] right-0 -translate-y-1/2 w-160 aspect-[186/198]" src="/wp-content/themes/ifh_theme/media/images/furisode/hato-only.svg" alt="" width="186" height="198">
+            <img class="absolute top-[50%] pc:top-[75%] right-0 -translate-y-1/2 w-80 pc:w-160 aspect-[186/198]" src="/wp-content/themes/ifh_theme/media/images/furisode/hato-only.svg" alt="" width="186" height="198">
             <!-- 背景色と重なる範囲だけ白くする用 -->
             <div class="absolute inset-0 overflow-hidden pointer-events-none">
               <img
-                class="absolute top-[75%] right-0 -translate-y-1/2 w-160 aspect-[186/198] brightness-0 invert"
+                class="absolute top-[50%] pc:top-[75%] right-0 -translate-y-1/2 w-80 pc:w-160 aspect-[186/198] brightness-0 invert"
                 src="/wp-content/themes/ifh_theme/media/images/furisode/hato-only.svg"
                 alt=""
                 width="186"
@@ -147,7 +147,9 @@ get_header();
               rental full pack PLAN
             </p>
           </div>
+        </div>
 
+        <div class="mx-auto max-pc:px-20 w-full pc:max-w-1200">
           <div class="mx-auto max-w-1020">
             <div class="border-b-2 border-[#ab8f4a] pb-8 md:pb-16">
               <h2 class="mt-16 text-18 pc:text-20 text-center font-medium">振袖レンタルフルパックプラン</h2>
@@ -210,39 +212,37 @@ get_header();
               </ul>
             </div>
 
-            <div class="mt-32 pc:mt-40">
-              <div class="flex max-md:flex-col gap-y-32 gap-x-64">
-                <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-1">
-                  <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">フルパックプラン詳細</span>
-                  <div class="flex items-center gap-x-8">
-                    <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
-                      <g>
-                        <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
-                        <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
-                      </g>
-                    </svg>
-                    <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
-                  </div>
-                </button>
-                <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-2">
-                  <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">ママ振プラン詳細</span>
-                  <div class="flex items-center gap-x-8">
-                    <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
-                      <g>
-                        <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
-                        <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
-                      </g>
-                    </svg>
-                    <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
           </div>
 
+        </div>
 
-
+        <div class="mt-32 pc:mt-40 mx-auto pc:max-w-1020">
+          <div class="flex max-md:flex-col gap-y-32 gap-x-64">
+            <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-1">
+              <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">フルパックプラン詳細</span>
+              <div class="flex items-center gap-x-8">
+                <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
+                  <g>
+                    <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
+                    <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
+                  </g>
+                </svg>
+                <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
+              </div>
+            </button>
+            <button class="js-modal-trigger md:grow border border-[#ff9aab] flex justify-center items-center gap-x-24 py-8" data-modal-target="modal-content-2">
+              <span class="max-md:w-172 pb-[0.1em] font-normal font-noto-serif">ママ振プラン詳細</span>
+              <div class="flex items-center gap-x-8">
+                <svg class="w-14 fill-coral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.31 18.17">
+                  <g>
+                    <polygon class="fill-[#ff184c]" points=".69 18.17 0 17.44 8.78 9.08 0 .72 .69 0 10.23 9.08 .69 18.17" />
+                    <polygon class="fill-[#ff184c]" points="7.77 18.17 7.08 17.44 15.86 9.08 7.08 .72 7.77 0 17.31 9.08 7.77 18.17" />
+                  </g>
+                </svg>
+                <span class="pb-[0.1em] font-normal font-noto-serif">more</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         <div class="mt-80 mx-auto max-w-1200">
@@ -536,29 +536,37 @@ get_header();
 
         <div class="mt-40 pc:mt-80 mx-auto max-w-780 flex flex-wrap">
           <div class="w-full text-center font-noto-serif">
-            <div class="text-20 pc:text-22">
-              Ifh honten / Ifh honten iizuka / BIANCA maebashi / BIANCA isesaki
+            <div class="text-20 pc:text-22 max-pc:leading-[2]">
+              Ifh honten <br class="pc:hidden"><span class="max-pc:hidden">/ </span>Ifh honten iizuka <br class="pc:hidden"><span class="max-pc:hidden">/ </span>BIANCA maebashi <br class="pc:hidden"><span class="max-pc:hidden">/ </span>BIANCA isesaki
             </div>
           </div>
 
           <div class="mt-40 pc:mt-80 mx-auto w-full max-w-600 bg-gradient-to-l from-[#ff9aab] to-[#ff184c] p-24 rounded-8">
-            <p class="text-white text-center font-medium leading-[1.8]">
-              成人式に関するお問い合わせ・ご質問・ご予約は<br>
-              <span class="text-20 font-semibold border-b-2 border-white">公式 LINE</span> よりお願いいたします
+            <p class="text-20 text-white text-center font-medium leading-[1.8]">
+              成人式に関する<br class="pc:hidden">お問い合わせ・ご質問・ご予約は<br>
+              <span class="text-24 font-semibold border-b-2 border-white leading-none">公式 LINE</span> よりお願いいたします
             </p>
+            <div class="mt-24 mx-auto w-full max-w-326 space-y-16 text-center text-[#484947]">
+              <div class="overflow-hidden rounded-8">
+                <p class="bg-[#f8e6e3] py-8 text-16 font-medium leading-[1.4]">振袖相談会 公式 LINE</p>
+                <p class="bg-white px-16 py-8 text-14 leading-[1.5]">振袖相談会に関するお問い合わせ・ご予約</p>
+              </div>
+              <div class="overflow-hidden rounded-8">
+                <p class="bg-[#c8e7e9] py-8 text-16 font-medium leading-[1.4]">成人式 公式 LINE</p>
+                <p class="bg-white px-16 py-8 text-14 leading-[1.5]">成人式当日の着付・ヘアメイクに<br>関するお問い合わせ・ご予約</p>
+              </div>
+            </div>
           </div>
 
-          <div class="mt-40 pc:mt-120 max-pc:fixed max-pc:left-0 max-pc:bottom-0 w-full flex pc:justify-center gap-x-0 pc:gap-x-80">
-            <a class="max-pc:w-1/2 flex max-pc:bg-[#fad7d4]" href="https://www.instagram.com/ifh_kimono/" target='_blank'>
-              <picture>
-                <source media='(min-width: 768px)' srcset='/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-bannerinsta.svg'>
-                <img class='w-full' src='/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-bannerinsta-sp.svg' alt='' loading='lazy' width='188' height='60'>
-              </picture>
-            </a><a class="max-pc:w-1/2 flex max-pc:bg-[#f2f0f0]" href="https://lin.ee/USNxXly" target='_blank'>
-              <picture>
-                <source media='(min-width: 768px)' srcset='/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-bannerline.svg'>
-                <img class='w-full' src='/wp-content/themes/ifh_theme/assets/media/images/furisode/svg-bannerline-sp.svg' alt='' loading='lazy' width='188' height='60'>
-              </picture>
+          <div class="z-[1] pc:mt-120 max-pc:bg-[rgba(35,24,21,0.3)] max-pc:p-4 max-pc:fixed max-pc:left-0 max-pc:bottom-0 w-full flex pc:justify-center gap-x-4 pc:gap-x-80">
+            <a class="w-1/2 pc:w-336 h-60 flex items-center justify-center gap-16 bg-[#c8e7e9] hover:opacity-70 duration-300" href="https://lin.ee/WTzFDq6" target='_blank'>
+              <span class="text-center leading-[1.3]">成人式 <br class="pc:hidden">公式 LINE</span>
+              <?php [$src, $wh] = theme_img_src_wh("media/images/furisode/line.svg"); ?>
+              <img class="w-40" src="<?php echo $src; ?>" alt="LINE" loading="lazy" <?php echo $wh; ?>>
+            </a><a class="w-1/2 pc:w-336 h-60 flex items-center justify-center gap-16 bg-[#fad7d4] hover:opacity-70 duration-300" href="https://lin.ee/USNxXly" target='_blank'>
+              <span class="text-center leading-[1.3]">振袖相談会 <br class="pc:hidden">公式 LINE</span>
+              <?php [$src, $wh] = theme_img_src_wh("media/images/furisode/line.svg"); ?>
+              <img class="w-40" src="<?php echo $src; ?>" alt="LINE" loading="lazy" <?php echo $wh; ?>>
             </a>
           </div>
 
