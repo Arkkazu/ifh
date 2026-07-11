@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/docker-project/ifh/**)",
+      "Bash(ls -la)",
+      "Bash(ls -la \"html/wp-content/themes/ifh_theme/MyBrain\")",
+      "Bash(find . -maxdepth 4 -type d -iname \"MyBrain\")"
+    ]
+  }
+}

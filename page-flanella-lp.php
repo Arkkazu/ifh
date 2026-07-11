@@ -9,19 +9,13 @@ get_header();
       <div class="relative">
         <?php [$src, $wh] = theme_img_src_wh('media/images/flanella-lp/flanella_1@2x.webp'); ?>
         <img class="w-full" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
-        <a class="block absolute bottom-16 md:bottom-32 left-1/2 -translate-x-1/2 w-[89.3%] hoverable:hover:opacity-70 transition-opacity duration-500" href="https://lin.ee/X8zEiV1" target="_blank" rel="noopener noreferrer">
-          <?php [$src, $wh] = theme_img_src_wh("media/images/flanella-lp/flanella_1_2@2x.webp"); ?>
-          <img class="w-full" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
-        </a>
       </div>
-
-      <?php [$src, $wh] = theme_img_src_wh("media/images/flanella-lp/flanella_2@2x.webp"); ?>
-      <img class="w-full" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
-
       <div class="relative">
-        <?php [$src, $wh] = theme_img_src_wh("media/images/flanella-lp/flanella_3@2x.webp"); ?>
-        <a href="https://lin.ee/X8zEiV1" target="_blank" rel="noopener noreferrer">
-          <img class="w-full" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
+        <?php [$src, $wh] = theme_img_src_wh("media/images/flanella-lp/flanella_2@2x.webp"); ?>
+        <img class="w-full" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
+        <a class="absolute bottom-52 md:bottom-96 left-1/2 -translate-x-1/2 " href="https://lin.ee/X8zEiV1" target="_blank" rel="noopener noreferrer">
+          <?php [$src, $wh] = theme_img_src_wh("media/images/flanella-lp/btn.svg"); ?>
+          <img class="max-w-none w-320 md:w-560 pc:w-600" src="<?php echo $src; ?>" alt="" loading="lazy" <?php echo $wh; ?>>
         </a>
       </div>
 
