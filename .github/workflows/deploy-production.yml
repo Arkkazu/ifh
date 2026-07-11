@@ -67,7 +67,17 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$PROD_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "${PROD_PORT:-22}" "$PROD_HOST" >> ~/.ssh/known_hosts
+
+          keyscan_succeeded=false
+          for attempt in 1 2 3 4 5; do
+            if ssh-keyscan -T 10 -t rsa,ecdsa,ed25519 -p "${PROD_PORT:-22}" "$PROD_HOST" >> ~/.ssh/known_hosts 2>/dev/null; then
+              keyscan_succeeded=true
+              break
+            fi
+            echo "SSH host-key scan attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          test "$keyscan_succeeded" = true
 
       - name: Deploy directly to production theme directory
         if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
