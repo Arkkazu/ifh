@@ -60,6 +60,7 @@ jobs:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_PORT: ${{ secrets.PROD_PORT }}
           PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+          PROD_SSH_KNOWN_HOSTS: ${{ secrets.PROD_SSH_KNOWN_HOSTS }}
         run: |
           set -eu
           test -n "$PROD_HOST"
@@ -68,16 +69,25 @@ jobs:
           printf '%s\n' "$PROD_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
+          : > ~/.ssh/known_hosts
+          if [ -n "$PROD_SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$PROD_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            echo "Using the pinned production SSH host key."
+            exit 0
+          fi
+
           keyscan_succeeded=false
-          for attempt in 1 2 3 4 5; do
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
             if ssh-keyscan -T 10 -t rsa,ecdsa,ed25519 -p "${PROD_PORT:-22}" "$PROD_HOST" >> ~/.ssh/known_hosts 2>/dev/null; then
               keyscan_succeeded=true
               break
             fi
             echo "SSH host-key scan attempt $attempt failed; retrying..."
-            sleep 5
+            sleep 10
           done
           test "$keyscan_succeeded" = true
+          chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy directly to production theme directory
         if: ${{ env.DEPLOY_MODE == 'direct-deploy' }}
@@ -94,7 +104,7 @@ jobs:
           test -n "$PROD_PATH"
           PROD_PATH="${PROD_PATH%/}"
 
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=20 -o ConnectionAttempts=3"
           REMOTE="$PROD_USER@$PROD_HOST"
 
           q() { printf '%q' "$1"; }
@@ -149,7 +159,7 @@ jobs:
           test -n "$PROD_PATH"
           PROD_PATH="${PROD_PATH%/}"
 
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=20 -o ConnectionAttempts=3"
           REMOTE="$PROD_USER@$PROD_HOST"
 
           q() { printf '%q' "$1"; }
@@ -332,7 +342,7 @@ jobs:
           THEME_NAME="$(basename "$PROD_PATH")"
           RESET_NAME=".deploy-opcache-reset-${GITHUB_SHA::12}.php"
 
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=20 -o ConnectionAttempts=3"
           REMOTE="$PROD_USER@$PROD_HOST"
 
           q() { printf '%q' "$1"; }
@@ -377,7 +387,7 @@ jobs:
           test -n "$PROD_PATH"
           PROD_PATH="${PROD_PATH%/}"
 
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=20 -o ConnectionAttempts=3"
           REMOTE="$PROD_USER@$PROD_HOST"
 
           q() { printf '%q' "$1"; }
@@ -426,7 +436,7 @@ jobs:
           test -n "$PROD_PATH"
           PROD_PATH="${PROD_PATH%/}"
 
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -p ${PROD_PORT:-22} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=20 -o ConnectionAttempts=3"
           REMOTE="$PROD_USER@$PROD_HOST"
 
           q() { printf '%q' "$1"; }
