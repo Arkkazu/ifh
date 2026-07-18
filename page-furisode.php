@@ -2,7 +2,7 @@
 get_header();
 ?>
 
-<body class="max-pc:pb-68">
+<body class="pb-68">
   <?php //get_template_part('inc', 'header' );
   ?>
   <main class="pb-80 pc:pb-160 overflow-hidden">
