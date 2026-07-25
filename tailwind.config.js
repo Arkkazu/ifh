@@ -2,7 +2,7 @@
 import plugin from "tailwindcss/plugin";
 
 export default {
-  // content: ["./**/*.php", "./assets/**/*.js"],
+  content: ["./*.php", "./template-parts/**/*.php", "./inc/**/*.php", "./src/**/*.{js,css}"],
   theme: {
     extend: {
       fontFamily: {

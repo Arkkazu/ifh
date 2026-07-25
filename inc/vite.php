@@ -3,11 +3,14 @@
 add_action('wp_enqueue_scripts', function () {
 
   /* ───── 環境判定 ───── */
-  $host   = $_SERVER['HTTP_HOST'];
-  $is_dev = str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
-  $vite   = $is_dev
-    ? 'http://localhost:5173'
-    : get_template_directory_uri() . '/dist/assets';
+  $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+  $host = preg_replace('/:\d+$/', '', $host);
+  $is_vite_proxy = $host === 'ifh.test' && ($_SERVER['HTTP_X_IFH_VITE'] ?? '') === '1';
+  $is_direct_vite = in_array($host, ['localhost', '127.0.0.1'], true);
+  $is_dev = $is_vite_proxy || $is_direct_vite;
+  $vite = $is_vite_proxy
+    ? 'http://ifh.test'
+    : ($is_direct_vite ? 'http://localhost:5173' : get_template_directory_uri() . '/dist/assets');
 
   $asset_version = function ($filename) {
     $path = get_template_directory() . '/dist/assets/' . $filename;

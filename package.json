@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:container": "vite --host 0.0.0.0 --port 5173 --strictPort",
     "build": "vite build && node scripts/normalize-media-queries.mjs",
     "preview": "vite preview",
     "critical:front": "node scripts/generate-critical.mjs"
