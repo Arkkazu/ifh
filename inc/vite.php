@@ -9,7 +9,7 @@ add_action('wp_enqueue_scripts', function () {
   $is_direct_vite = in_array($host, ['localhost', '127.0.0.1'], true);
   $is_dev = $is_vite_proxy || $is_direct_vite;
   $vite = $is_vite_proxy
-    ? 'http://ifh.test'
+    ? 'https://ifh.test'
     : ($is_direct_vite ? 'http://localhost:5173' : get_template_directory_uri() . '/dist/assets');
 
   $asset_version = function ($filename) {
@@ -21,6 +21,7 @@ add_action('wp_enqueue_scripts', function () {
   if ($is_dev) {
     add_action('wp_footer', fn() => print(
       '<script type="module" src="' . $vite . '/@vite/client"></script>'
+      . '<script type="module" src="' . $vite . '/__ifh_live/client.js"></script>'
       . '<script type="module" src="' . $vite . '/src/main.js"></script>'
     ));
   } else {
