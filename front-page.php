@@ -87,7 +87,7 @@ get_header();
           幸せを感じることができる。<br>
           そんな会社を目指しています! -->
           </p>
-          <h1 class="text-white leading-[1.3] md:text-center">
+          <h1 class="home-intro__heading text-black leading-[1.3] md:text-center">
             高崎市・前橋市・伊勢崎市の美容室・美容院・ヘアサロン
           </h1>
         </div>
@@ -256,7 +256,7 @@ get_header();
           ?>
 
             <div class="mt-40 pc:mt-80">
-              <div class="splide home-collection-splide" aria-label="コレクションスライダー">
+              <div class="splide home-collection-splide" role="region" aria-label="コレクションスライダー">
                 <div class="splide__track">
                   <ul class="splide__list">
                     <?php while ($wp_query->have_posts()) :

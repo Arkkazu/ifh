@@ -267,23 +267,21 @@
     $og_img = home_url('/wp-content/uploads/default-ogp.jpg');
   }
 
-  // canonical（全ページで出力）
-  // $canonical_url = is_singular() ? get_permalink() : home_url(add_query_arg([], $wp->request ?? '') . '/');
-  // if (is_front_page()) {
-  //   $canonical_url = home_url('/');
-  // }
+  // 個別ページはWordPressコア、それ以外のホームはテーマで出力する。
+  $canonical_url = '';
+  if (!is_singular() && (is_front_page() || is_home())) {
+    $canonical_url = get_pagenum_link(max(1, (int) get_query_var('paged')), false);
+    $canonical_url = remove_query_arg(array_diff(array_keys($_GET), ['paged']), $canonical_url);
+    $canonical_url = set_url_scheme($canonical_url, 'https');
+    $og_url = $canonical_url;
+  }
   ?>
 
   <title><?php echo esc_html($title); ?></title>
   <meta name="description" content="<?php echo esc_attr($desc); ?>">
 
-  <?php
-  // $canonical_url = set_url_scheme(get_permalink(), 'https');
-  // echo '<link rel="canonical" href="' . esc_url($canonical_url) . '">';
-  ?>
-
-  <?php if (is_page('takasaki')) : ?>
-  <link rel="canonical" href="<?php echo esc_url(home_url('/takasaki/')); ?>">
+  <?php if ($canonical_url) : ?>
+    <link class="site-canonical" rel="canonical" href="<?php echo esc_url($canonical_url); ?>">
   <?php endif; ?>
 
   <meta property="og:title" content="<?php echo esc_html($title); ?>">
@@ -292,6 +290,7 @@
   <meta property="og:image" content="<?php echo esc_url($og_img); ?>">
   <meta property="og:description" content="<?php echo esc_attr($desc); ?>">
   <meta property="og:site_name" content="<?php echo esc_attr($og_site_name); ?>">
+  <meta class="site-og-locale" property="og:locale" content="ja_JP">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?php echo esc_html($title); ?>">
@@ -300,11 +299,15 @@
 
   <link rel="shortcut icon" href="/favicon.ico">
 
-  <meta name="robots" content="max-image-preview:large">
-
-  <?php if (is_404()) : ?>
-    <meta name="robots" content="noindex">
-  <?php endif; ?>
+  <?php
+  // コアの検索・非公開設定を維持し、robotsタグを一つにまとめる。
+  add_filter('wp_robots', static function (array $robots): array {
+    if (is_404()) {
+      $robots['noindex'] = true;
+    }
+    return $robots;
+  });
+  ?>
 
   <?php wp_head(); ?>
 </head>
