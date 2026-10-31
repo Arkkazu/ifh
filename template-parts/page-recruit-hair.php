@@ -192,7 +192,7 @@
                     / Hair section career /
                   </h3>
                   <div class="recruit-page__group mt-40 pc:mt-88 w-full max-md:px-20">
-                    <img class="recruit-page__image w-full" src="/wp-content/themes/ifh_theme/media/images/recruit/career-hair2.svg" alt="入社前アカデミーから3ヶ月でカラーリスト、6ヶ月でメンズ、1年でスタイリスト、2年でトップスタイリストを目指すキャリアモデル" loading="lazy" width="132" height="305">
+                    <img class="recruit-page__image w-full" src="/wp-content/themes/ifh_theme/media/images/recruit/career-hair3.svg" alt="入社前アカデミーから3ヶ月でカラーリスト、6ヶ月でメンズ、1年でスタイリスト、2年でトップスタイリストを目指すキャリアモデル" loading="lazy" width="389" height="951">
                   </div>
                   <div class="recruit-page__group mt-60 pc:mt-120 w-full ">
                     <div class="recruit-page__group bg-[rgba(35,24,21,0.5)] p-24">

@@ -22,7 +22,7 @@
             <p class="welfare-benefit__body">いつもキレイでいられるように、ヘアはもちろん、ネイル・アイラッシュも会社負担で半額or最大無料で施術できる！トータルビューティでどんどんおしゃれになれちゃう！</p>
           </article>
           <article class="welfare-benefit">
-            <img class="welfare-benefit__icon" src="/wp-content/themes/ifh_theme/media/images/recruit/wig-allowance.svg" alt="" width="20" height="26" loading="lazy">
+            <img class="welfare-benefit__icon" src="/wp-content/themes/ifh_theme/media/images/recruit/wig.svg" alt="" width="90" height="90" loading="lazy">
             <h2 class="welfare-benefit__heading">ウィッグ手当5万円支給</h2>
             <p class="welfare-benefit__body">入社後、カットの練習に入るタイミングに20台分のウィッグ手当を支給します。</p>
           </article>
