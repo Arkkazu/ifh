@@ -7,8 +7,8 @@ function wordpressTemplateReload() {
   return {
     name: "ifh-wordpress-template-reload",
     hotUpdate({ file }) {
-      // PHPの更新通知はCSS生成後の一度だけにする。
-      if (file.endsWith(".php")) return [];
+      // PHPとCSSの更新通知はCSS生成後の一度だけにする。
+      if (file.endsWith(".php") || file.endsWith(".css")) return [];
     },
     configureServer(server) {
       const boot = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -28,7 +28,21 @@ function wordpressTemplateReload() {
           return;
         }
         res.setHeader("Content-Type", "text/javascript");
-        res.end(`let seen;
+        res.end(`function releaseFallbackStyle() {
+  const fallback = document.querySelector('[data-ifh-dev-fallback]');
+  if (!fallback) return true;
+  const liveStyle = document.querySelector('style[data-vite-dev-id$="/src/style.css"]');
+  if (!liveStyle?.sheet?.cssRules.length) return false;
+  fallback.remove();
+  return true;
+}
+const fallbackObserver = new MutationObserver(() => {
+  if (releaseFallbackStyle()) fallbackObserver.disconnect();
+});
+if (!releaseFallbackStyle()) {
+  fallbackObserver.observe(document.head, { childList: true, subtree: true, characterData: true });
+}
+let seen;
 let checking = false;
 async function check() {
   if (checking) return;
@@ -49,7 +63,9 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) chec
       });
 
       const reload = (file) => {
-        if (!file.endsWith(".php")) return;
+        const sourceRoot = path.resolve(server.config.root, "src") + path.sep;
+        const isSourceCss = file.endsWith(".css") && path.resolve(file).startsWith(sourceRoot);
+        if (!file.endsWith(".php") && !isSourceCss) return;
         pending = true;
         const current = ++generation;
         clearTimeout(timer);
@@ -58,15 +74,14 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) chec
             if (current !== generation) return;
             // PHP内の新しいTailwindクラスを生成してから更新を通知する。
             const graph = server.environments.client.moduleGraph;
-            const cssUrls = new Set(["/src/style.css"]);
-            const sourceRoot = path.resolve(server.config.root, "src") + path.sep;
             for (const module of graph.idToModuleMap.values()) {
               if (module.type === "css" && module.file?.startsWith(sourceRoot)) {
                 graph.invalidateModule(module);
-                cssUrls.add(module.url);
               }
             }
-            await Promise.all([...cssUrls].map((url) => server.transformRequest(url)));
+            // 同じCSSの通常版・?direct版・依存CSSを並行変換すると、
+            // Tailwindの依存解決が互いを待つため、共通エントリから一度だけ生成する。
+            await server.transformRequest("/src/style.css");
             if (current !== generation) return;
             revision += 1;
             pending = false;

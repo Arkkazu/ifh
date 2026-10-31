@@ -46,3 +46,21 @@ if (pagetopLink) {
   });
 }
 //// end ページトップへスクロール
+
+// 内部スクロール領域のバーを採用固定ボタンで覆わないようにする。
+const recruitBanner = document.querySelector("[data-recruit-banner]");
+const pageScrollContainer = document.querySelector("[data-page-scroll-container]");
+if (recruitBanner && pageScrollContainer) {
+  const alignRecruitBanner = () => {
+    const { left } = pageScrollContainer.getBoundingClientRect();
+    const contentRight = left + pageScrollContainer.clientLeft + pageScrollContainer.clientWidth;
+    const offset = Math.max(0, window.innerWidth - contentRight);
+    recruitBanner.style.setProperty("--recruit-scrollbar-offset", `${offset}px`);
+  };
+
+  alignRecruitBanner();
+  window.addEventListener("resize", alignRecruitBanner);
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(alignRecruitBanner).observe(pageScrollContainer);
+  }
+}

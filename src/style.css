@@ -1,8 +1,9 @@
 @layer theme, base, components;
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/preflight" layer(base);
-@import "tailwindcss/utilities";
+@import "tailwindcss/utilities" source(none);
 @import "@splidejs/splide/css/core";
+@import "./recruit-revisions.css";
 @config "../tailwind.config.js";
 
 @font-face {

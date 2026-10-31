@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="20" height="26" viewBox="0 0 20 26" class="wig-allowance">
+<defs class="wig-allowance__defs">
+<clipPath id="clip_1" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M264 444.89H284V470.89H264Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_2" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 0H595.276V841.89H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_3" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M24.352 502.456H445.133V759.271H24.352Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_4" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M36.786 122.819H417.465V224.23401H36.786Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_5" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_6" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M40.6028 376.511H187.038V479.781H40.6028Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_7" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M203.452 376.511H349.887V479.781H203.452Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_8" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M366.301 376.511H512.736V479.781H366.301Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_9" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M40.6028 272.86H270.451V362.546H40.6028Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_10" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M282.915 272.86H512.527V362.546H282.915Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_11" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_12" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_13" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_14" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+<clipPath id="clip_15" class="wig-allowance__clipPath">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M0 841.89H595.276V0H0Z" class="wig-allowance__path" />
+</clipPath>
+</defs>
+<g clip-path="url(#clip_1)" class="wig-allowance__g">
+<g clip-path="url(#clip_2)" class="wig-allowance__g">
+<g clip-path="url(#clip_3)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_4)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_5)" class="wig-allowance__g">
+<g style="mix-blend-mode:multiply" class="wig-allowance__g">
+<g clip-path="url(#clip_6)" class="wig-allowance__g">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M187.038 376.511H40.602998V479.78099H187.038Z" fill="#eee9e2" class="wig-allowance__path" />
+</g>
+</g>
+<g style="mix-blend-mode:multiply" class="wig-allowance__g">
+<g clip-path="url(#clip_7)" class="wig-allowance__g">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M349.887 376.511H203.452V479.78099H349.887Z" fill="#eee9e2" class="wig-allowance__path" />
+</g>
+</g>
+<g style="mix-blend-mode:multiply" class="wig-allowance__g">
+<g clip-path="url(#clip_8)" class="wig-allowance__g">
+<path transform="matrix(1,0,0,-1,-264,470.89)" d="M512.736 376.511H366.30104V479.78099H512.736Z" fill="#eee9e2" class="wig-allowance__path" />
+</g>
+</g>
+<g style="mix-blend-mode:multiply" class="wig-allowance__g">
+<g clip-path="url(#clip_9)" class="wig-allowance__g">
+</g>
+</g>
+<g style="mix-blend-mode:multiply" class="wig-allowance__g">
+<g clip-path="url(#clip_10)" class="wig-allowance__g">
+</g>
+</g>
+</g>
+<g clip-path="url(#clip_11)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_12)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_13)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_14)" class="wig-allowance__g">
+</g>
+<g clip-path="url(#clip_15)" class="wig-allowance__g">
+<path transform="matrix(1,0,0,-1,17.387207,20.365815)" d="M0 0C-.029-.029-.089-.079-.188-.137-.382-.254-.695-.396-1.098-.533-2.314-.948-4.354-1.34-6.859-1.339-8.961-1.339-10.734-1.065-11.97-.73-12.587-.563-13.071-.38-13.382-.219-13.537-.14-13.648-.065-13.703-.016L-13.719-.001C-13.728 .122-13.734 .244-13.734 .358-13.733 1.005-13.6 1.505-13.392 1.911-13.08 2.517-12.586 2.926-12.045 3.229-11.639 3.456-11.214 3.616-10.839 3.748-10.768 3.635-10.684 3.523-10.585 3.408-10.267 3.046-9.798 2.678-9.175 2.398-8.553 2.118-7.778 1.928-6.859 1.928-5.634 1.928-4.665 2.266-3.972 2.704-3.625 2.923-3.346 3.166-3.134 3.408-3.035 3.521-2.953 3.632-2.883 3.743-2.341 3.546-1.694 3.295-1.155 2.877-.824 2.621-.536 2.308-.327 1.905-.119 1.501 .015 1.003 .016 .356 .015 .243 .009 .122 0 0M-9.307 4.448C-9.114 4.574-8.935 4.711-8.788 4.872-8.714 4.953-8.648 5.041-8.595 5.145-8.543 5.248-8.504 5.37-8.504 5.508V6.744 6.899L-8.607 7.014C-8.825 7.255-9.14 7.56-9.431 7.955-9.717 8.343-9.968 8.807-10.068 9.345V12.617H-3.65V9.345C-3.75 8.807-4.002 8.342-4.287 7.955-4.578 7.56-4.893 7.255-5.111 7.014L-5.215 6.899V6.744 5.508C-5.215 5.375-5.179 5.254-5.129 5.152-5.04 4.972-4.912 4.836-4.769 4.71-4.553 4.524-4.294 4.365-4.026 4.223-3.903 4.159-3.779 4.101-3.657 4.046-3.683 4.012-3.71 3.977-3.742 3.941-3.978 3.672-4.357 3.368-4.875 3.135-5.394 2.902-6.052 2.737-6.859 2.737-7.935 2.738-8.748 3.031-9.315 3.388-9.598 3.566-9.819 3.762-9.976 3.941-10.008 3.976-10.034 4.011-10.06 4.044-9.811 4.156-9.549 4.291-9.307 4.448M-12.162 6.102C-12.066 6.699-12.033 7.313-12.033 7.992-12.034 9.296-12.143 10.848-12.143 13.048V13.049C-12.139 15.096-11.36 16.493-10.313 17.414-9.266 18.333-7.926 18.756-6.859 18.754-5.792 18.756-4.452 18.333-3.405 17.414-2.358 16.492-1.579 15.095-1.575 13.048-1.576 10.85-1.685 9.298-1.685 7.996-1.685 7.315-1.652 6.7-1.556 6.102H-3.704-4.406V6.585C-4.21 6.793-3.919 7.09-3.636 7.476-3.3 7.932-2.974 8.516-2.848 9.228L-2.842 9.264V13.426H-10.877V9.263L-10.87 9.228C-10.744 8.516-10.418 7.932-10.082 7.476-9.799 7.091-9.508 6.793-9.312 6.584V6.102ZM.391 2.277C-.016 3.064-.656 3.576-1.283 3.925-1.911 4.274-2.539 4.474-2.955 4.63-3.28 4.751-3.69 4.94-3.993 5.139-4.074 5.191-4.144 5.243-4.205 5.294H-1.069-.562L-.675 5.788C-.828 6.459-.877 7.155-.877 7.996-.877 9.253-.767 10.824-.766 13.048-.762 15.307-1.659 16.965-2.873 18.022-4.086 19.081-5.59 19.56-6.859 19.562-8.129 19.56-9.632 19.081-10.846 18.023-12.059 16.966-12.955 15.308-12.951 13.049V13.048C-12.951 10.822-12.842 9.25-12.842 7.992-12.842 7.154-12.89 6.459-13.043 5.788L-13.156 5.294H-12.649-9.52C-9.628 5.204-9.769 5.105-9.924 5.018-10.203 4.856-10.523 4.715-10.756 4.633-11.322 4.431-12.253 4.153-13.061 3.526-13.466 3.212-13.841 2.806-14.111 2.281-14.382 1.756-14.543 1.118-14.543 .358-14.543 .201-14.536 .038-14.522-.13-14.511-.253-14.464-.35-14.413-.427-14.315-.57-14.194-.668-14.047-.767-13.791-.937-13.446-1.097-13.006-1.254-11.693-1.722-9.534-2.147-6.859-2.148-4.686-2.148-2.851-1.866-1.537-1.511-.879-1.332-.352-1.137 .034-.938 .228-.838 .386-.739 .518-.624 .583-.566 .643-.505 .695-.427 .746-.35 .793-.253 .803-.13 .817 .037 .824 .199 .824 .356 .825 1.115 .662 1.754 .391 2.277" fill="#595757" class="wig-allowance__path" />
+</g>
+</g>
+</g>
+</svg>

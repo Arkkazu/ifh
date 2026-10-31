@@ -27,7 +27,6 @@
       </p>
     </div>
   </div>
-  </p>
 </div>
 
 <div id="modal-content-2" class="hidden">
@@ -50,7 +49,6 @@
       </p>
     </div>
   </div>
-  </p>
 </div>
 
 <div id="modal-content-3" class="hidden">
@@ -67,5 +65,4 @@
       </p>
     </div>
   </div>
-  </p>
 </div>

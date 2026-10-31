@@ -8,6 +8,13 @@ add_action('wp_enqueue_scripts', function () {
   $is_vite_proxy = $host === 'ifh.test' && ($_SERVER['HTTP_X_IFH_VITE'] ?? '') === '1';
   $is_direct_vite = in_array($host, ['localhost', '127.0.0.1'], true);
   $is_dev = $is_vite_proxy || $is_direct_vite;
+  if (is_page() && ($is_dev || is_page('welfare'))) {
+    // 開発用・福利厚生用モジュールと旧ページバンドルの二重実行を避ける。
+    $page_script_handle = 'page-' . get_post_field('post_name');
+    add_action('wp_enqueue_scripts', static function () use ($page_script_handle) {
+      wp_dequeue_script($page_script_handle);
+    }, 100);
+  }
   $vite = $is_vite_proxy
     ? 'https://ifh.test'
     : ($is_direct_vite ? 'http://localhost:5173' : get_template_directory_uri() . '/dist/assets');
@@ -19,6 +26,15 @@ add_action('wp_enqueue_scripts', function () {
 
   /* ───── 共通アセット ───── */
   if ($is_dev) {
+    // 開発用CSSの再生成中も初回描画を安定させる。更新はViteが上書きする。
+    if (file_exists(get_template_directory() . '/dist/assets/style.css')) {
+      wp_enqueue_style(
+        'theme-dev-style',
+        get_template_directory_uri() . '/dist/assets/style.css',
+        [],
+        $asset_version('style.css')
+      );
+    }
     add_action('wp_footer', fn() => print(
       '<script type="module" src="' . $vite . '/@vite/client"></script>'
       . '<script type="module" src="' . $vite . '/__ifh_live/client.js"></script>'
@@ -71,7 +87,9 @@ add_action('wp_enqueue_scripts', function () {
     $prod_path = get_template_directory() . '/dist/assets/' . basename($rel_path, '.js') . '.js';
 
     if ($is_dev) {
-      /* dev は存在確認せず登録（404 はコンソール警告のみ）*/
+      if (!file_exists(get_template_directory() . '/' . $rel_path)) {
+        continue;
+      }
       add_action(
         'wp_footer',
         fn() =>
@@ -122,6 +140,9 @@ add_filter('script_loader_tag', function ($tag, $handle, $src) {
  * Vite 生成 CSS のうち theme-style は preload + onload で読み込む
  */
 add_filter('style_loader_tag', function ($html, $handle, $href, $media) {
+  if ($handle === 'theme-dev-style') {
+    return str_replace('<link ', '<link data-ifh-dev-fallback="" ', $html);
+  }
   if ($handle !== 'theme-style') {
     return $html;
   }
